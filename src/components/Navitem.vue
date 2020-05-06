@@ -83,6 +83,7 @@
   .link-text {
     display: none;
     margin-left: 1rem;
+    white-space: nowrap;
   }
 
   .logo {
