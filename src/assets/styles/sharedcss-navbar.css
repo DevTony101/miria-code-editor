@@ -1,0 +1,8 @@
+/*Large Screen*/
+@media only screen and (min-width: 600px) {
+  .navbar:hover .link-text {
+    display: inline;
+    color: var(--h-color);
+    transition: opacity var(--transition-speed);
+  }
+}

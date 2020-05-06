@@ -1,32 +1,58 @@
 <template>
+  <!--  TODO: Save the color theme in the local storage when creating the settings option-->
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <Sidenav ref="sidenav">
+      <template>
+        <Navitem icon="arrow" text="AppPlus" logo />
+        <Navitem
+          icon="home"
+          text="Home"
+          :selected="currentPage === 'home'"
+          @click="setSelectedPage('home')"
+        />
+        <Navitem
+          icon="list"
+          text="List All"
+          :selected="currentPage === 'list'"
+          @click="setSelectedPage('list')"
+        />
+        <Navitem
+          icon="edit"
+          text="Edit/Create"
+          :selected="currentPage === 'create'"
+          @click="setSelectedPage('create')"
+        />
+        <Navitem
+          icon="cog"
+          text="Settings"
+          :selected="currentPage === 'settings'"
+          @click="setSelectedPage('settings')"
+        />
+      </template>
+    </Sidenav>
     <router-view />
   </div>
 </template>
 
+<script>
+  import Sidenav from "./components/Sidenav";
+  import Navitem from "./components/Navitem";
+  export default {
+    name: "App",
+    components: { Navitem, Sidenav },
+    data: function() {
+      return {
+        currentPage: "home",
+      };
+    },
+    methods: {
+      setSelectedPage: function(page) {
+        this.currentPage = page;
+      },
+    },
+  };
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+  @import url("./assets/styles/global.css");
 </style>
