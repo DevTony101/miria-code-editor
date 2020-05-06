@@ -3,22 +3,22 @@
   <div id="app">
     <Sidenav ref="sidenav">
       <template>
-        <Navitem icon="arrow" text="AppPlus" logo />
+        <Navitem icon="arrow" text="Miria" logo />
         <Navitem
-          icon="home"
-          text="Home"
+          icon="code"
+          text="Code Editor"
           :selected="currentPage === 'home'"
           @click="setSelectedPage('home')"
         />
         <Navitem
-          icon="list"
-          text="List All"
+          icon="open-book"
+          text="Docs"
           :selected="currentPage === 'list'"
           @click="setSelectedPage('list')"
         />
         <Navitem
-          icon="edit"
-          text="Edit/Create"
+          icon="users"
+          text="Acerca de"
           :selected="currentPage === 'create'"
           @click="setSelectedPage('create')"
         />
