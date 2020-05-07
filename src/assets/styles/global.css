@@ -122,6 +122,15 @@ strong {
   }
 }
 
+.vue-codemirror {
+  height: 100%;
+}
+
+.CodeMirror {
+  border-radius: 0.5em;
+  height: 100% !important;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
   height: 11px;

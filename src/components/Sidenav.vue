@@ -21,6 +21,7 @@
     box-shadow: var(--nav-shadow);
     background-color: var(--nav-bg);
     transition: width 200ms ease;
+    z-index: 999;
   }
 
   .navbar-nav {

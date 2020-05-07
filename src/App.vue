@@ -18,7 +18,7 @@
         />
         <Navitem
           icon="users"
-          text="Acerca de"
+          text="About Miria"
           :selected="currentPage === 'create'"
           @click="setSelectedPage('create')"
         />
