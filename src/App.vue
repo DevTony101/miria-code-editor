@@ -22,12 +22,7 @@
           :selected="currentPage === 'create'"
           @click="setSelectedPage('create')"
         />
-        <Navitem
-          icon="cog"
-          text="Settings"
-          :selected="currentPage === 'settings'"
-          @click="setSelectedPage('settings')"
-        />
+        <Navitem :icon="icon" text="Change Theme" @click="changeTheme" />
       </template>
     </Sidenav>
     <router-view />
@@ -37,6 +32,8 @@
 <script>
   import Sidenav from "./components/Sidenav";
   import Navitem from "./components/Navitem";
+  import { mapState, mapActions } from "vuex";
+
   export default {
     name: "App",
     components: { Navitem, Sidenav },
@@ -46,8 +43,20 @@
       };
     },
     methods: {
+      ...mapActions(["updateTheme"]),
       setSelectedPage: function(page) {
         this.currentPage = page;
+      },
+      changeTheme: function() {
+        this.updateTheme(
+          this.theme === "light-theme" ? "dark-theme" : "light-theme"
+        );
+      },
+    },
+    computed: {
+      ...mapState(["theme"]),
+      icon: function() {
+        return this.theme === "light-theme" ? "moon" : "sun";
       },
     },
   };
