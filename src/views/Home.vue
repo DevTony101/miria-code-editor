@@ -5,11 +5,9 @@
         <h1 style="margin: 0">Live Code Editor</h1>
         <small>Type miria code right away!</small>
       </div>
-      <div class="controls">
-        <button class="button" @click="compileCode">
-          <BaseIcon iconName="play" />
-          Compile
-        </button>
+      <div class="toolbar">
+        <BaseButton icon="wrench">Compile</BaseButton>
+        <BaseButton icon="play">Run</BaseButton>
       </div>
     </div>
     <hr />
@@ -67,8 +65,8 @@
 
 <style scoped>
   .content-title {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto auto;
   }
 
   .custom-button {
@@ -83,36 +81,10 @@
     transition: height 100ms ease-in-out;
   }
 
-  .button {
+  .toolbar {
     display: flex;
-    border: transparent;
-    border-radius: 0.5em;
-    background-color: var(--green);
-    padding: 10px;
-    justify-content: space-evenly;
-    justify-items: center;
-    align-items: center;
-    font-weight: 600;
-    text-align: center;
-    width: 120px;
-  }
-
-  .button:hover {
-    cursor: pointer;
-    fill: white;
-    color: white;
-  }
-
-  .button:active {
-    border: none;
-    background-color: var(--green-dark);
-  }
-
-  .button svg {
-    width: 2rem;
-    min-width: 2rem;
-    height: 20px;
-    fill: var(--text-color);
+    justify-content: flex-end;
+    margin: auto 0 auto 0;
   }
 
   /*Small Screen*/
