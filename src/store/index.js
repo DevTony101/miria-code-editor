@@ -20,6 +20,7 @@ export default new Vuex.Store({
       } else {
         document.body.classList.replace(state.theme, theme);
         commit("SET_THEME", theme);
+        window.localStorage.setItem("theme", state.theme);
       }
     },
   },

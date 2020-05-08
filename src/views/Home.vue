@@ -41,7 +41,7 @@
     data: function() {
       return {
         code: "a -> String := 'Hola Mundo'\nlog(a)",
-        cmOptions: Object,
+        cmOptions: {},
       };
     },
     methods: {
@@ -79,7 +79,8 @@
     margin-top: 20px;
     border: 1px solid var(--background-secondary);
     border-radius: 0.5em;
-    height: 500px;
+    height: 520px;
+    transition: height 100ms ease-in-out;
   }
 
   .button {
@@ -112,5 +113,12 @@
     min-width: 2rem;
     height: 20px;
     fill: var(--text-color);
+  }
+
+  /*Small Screen*/
+  @media only screen and (max-width: 600px) {
+    .codemirror-content {
+      height: 450px;
+    }
   }
 </style>

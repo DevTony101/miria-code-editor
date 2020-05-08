@@ -36,7 +36,9 @@
 
   export default {
     name: "App",
-    components: { Navitem, Sidenav },
+    mounted() {
+      this.updateTheme();
+    },
     data: function() {
       return {
         currentPage: "home",
@@ -59,6 +61,7 @@
         return this.theme === "light-theme" ? "moon" : "sun";
       },
     },
+    components: { Navitem, Sidenav },
   };
 </script>
 
