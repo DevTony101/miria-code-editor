@@ -4,7 +4,9 @@ import router from "./router";
 import store from "./store";
 import upperFirst from "lodash/upperFirst";
 import camelCase from "lodash/camelCase";
+import VueSwal from "vue-swal";
 
+Vue.use(VueSwal);
 Vue.config.productionTip = false;
 
 const requireComponent = require.context(
