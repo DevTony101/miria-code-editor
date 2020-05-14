@@ -6,7 +6,7 @@
         <small>Type miria code right away!</small>
       </div>
       <div class="toolbar">
-        <BaseButton icon="wrench">Compile</BaseButton>
+        <BaseButton icon="wrench" @click="compileCode">Compile</BaseButton>
         <BaseButton icon="play">Run</BaseButton>
       </div>
     </div>
@@ -20,6 +20,7 @@
 <script>
   import { mapState } from "vuex";
   import { codemirror } from "vue-codemirror";
+  import { getMiriaParser } from "../grammar/miria-parser";
   import "codemirror/mode/javascript/javascript.js";
   import "codemirror/lib/codemirror.css";
   import "codemirror/theme/xq-light.css";
@@ -38,13 +39,15 @@
     },
     data: function() {
       return {
-        code: "a -> String := 'Hola Mundo'\nlog(a)",
+        code: 'a -> String := "Hola Mundo"',
         cmOptions: {},
       };
     },
     methods: {
       compileCode: function() {
-        alert("Compiling...");
+        const parser = getMiriaParser();
+        parser.feed(this.code);
+        console.log(parser.results);
       },
     },
     computed: mapState(["theme"]),
