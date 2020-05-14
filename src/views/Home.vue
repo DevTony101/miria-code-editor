@@ -2,7 +2,7 @@
   <div class="home main-content">
     <div class="content-title">
       <div class="title">
-        <h1 style="margin: 0">Live Code Editor</h1>
+        <h1 style="margin: 0">Code Editor</h1>
         <small>Type miria code right away!</small>
       </div>
       <div class="toolbar">
@@ -46,8 +46,21 @@
     methods: {
       compileCode: function() {
         const parser = getMiriaParser();
-        parser.feed(this.code);
-        console.log(parser.results);
+        let results = null;
+        try {
+          parser.feed(this.code);
+          results = parser.results;
+        } catch (err) {
+          const endMsg = err.message.indexOf("Instead");
+          let errorMsg = err.message.slice(0, endMsg - 1);
+          this.$swal(
+            "Oops! Build failed!",
+            "See console output for more info",
+            "error"
+          );
+          console.error(errorMsg);
+        }
+        console.log(results);
       },
     },
     computed: mapState(["theme"]),
