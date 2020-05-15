@@ -16,11 +16,13 @@
         <codemirror v-model="code" :options="cmOptions"></codemirror>
       </div>
       <ConsoleOutput>
-        <pre v-if="this.csoutput && this.buildFailed" class="error-msg">
-          {{ this.csoutput }}
-        </pre>
-        <template v-if="this.csoutput && !this.buildFailed">
-          <span class="success-msg">Everything Compiled Successfully!</span>
+        <template v-if="this.isCompiled">
+          <pre v-if="this.compilingFailed" class="error-msg"
+            >{{ this.compilationResult }}
+          </pre>
+          <template v-else>
+            <span class="success-msg">Compiled Successfully</span>
+          </template>
         </template>
       </ConsoleOutput>
     </div>
@@ -52,31 +54,46 @@
       return {
         cmOptions: {},
         code: 'a -> String := "Hola Mundo"',
-        buildFailed: false,
-        csoutput: null,
+        isCompiled: false,
+        compilingFailed: false,
+        compilationResult: null,
       };
     },
     methods: {
+      outputError: function(err) {
+        let errorMsg = err.message;
+        const endMsg = err.message.indexOf("Instead");
+        if (endMsg !== -1) errorMsg = err.message.slice(0, endMsg - 1);
+        this.compilationResult = errorMsg;
+        this.compilingFailed = true;
+        this.$swal(
+          "Oops! Compiling failed!",
+          "See console output for more info",
+          "error"
+        );
+        console.error(errorMsg);
+      },
       compileCode: function() {
-        this.csoutput = "a";
+        this.isCompiled = true;
+        this.compilingFailed = false;
         const parser = getMiriaParser();
         let results = null;
         try {
           parser.feed(this.code);
           results = parser.results;
         } catch (err) {
-          const endMsg = err.message.indexOf("Instead");
-          let errorMsg = err.message.slice(0, endMsg - 1);
-          this.csoutput = errorMsg;
-          this.buildFailed = true;
-          this.$swal(
-            "Oops! Build failed!",
-            "See console output for more info",
-            "error"
-          );
-          console.error(errorMsg);
+          this.outputError(err);
         }
-        console.log(results);
+        if (!this.compilingFailed) {
+          console.log(results);
+          this.$swal(
+            "Compiled successfully!",
+            "See console output for more info",
+            "success"
+          );
+        }
+        // TODO: Implement run code function that takes this results array
+        return { results };
       },
     },
     computed: mapState(["theme"]),
