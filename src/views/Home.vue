@@ -1,6 +1,6 @@
 <template>
   <div class="home main-content">
-    <div class="content-title">
+    <div class="main-title">
       <div class="title">
         <h1 style="margin: 0">Code Editor</h1>
         <small>Type miria code right away!</small>
@@ -11,8 +11,11 @@
       </div>
     </div>
     <hr />
-    <div class="codemirror-content">
-      <codemirror v-model="code" :options="cmOptions"></codemirror>
+    <div class="miria-code">
+      <div class="codemirror-content">
+        <codemirror v-model="code" :options="cmOptions"></codemirror>
+      </div>
+      <ConsoleOutput />
     </div>
   </div>
 </template>
@@ -25,6 +28,7 @@
   import "codemirror/lib/codemirror.css";
   import "codemirror/theme/xq-light.css";
   import "codemirror/theme/material.css";
+  import ConsoleOutput from "../components/ConsoleOutput";
 
   export default {
     name: "Home",
@@ -74,15 +78,24 @@
       },
     },
     components: {
+      ConsoleOutput,
       codemirror,
     },
   };
 </script>
 
 <style scoped>
-  .content-title {
+  .main-title {
     display: grid;
     grid-template-columns: auto auto;
+  }
+
+  .miria-code {
+    display: grid;
+    grid-template-columns: 800px auto;
+    column-gap: 2rem;
+    height: 520px;
+    padding-top: 20px;
   }
 
   .custom-button {
@@ -90,10 +103,9 @@
   }
 
   .codemirror-content {
-    margin-top: 20px;
     border: 1px solid var(--background-secondary);
     border-radius: 0.5em;
-    height: 520px;
+    height: 100%;
     transition: height 100ms ease-in-out;
   }
 
