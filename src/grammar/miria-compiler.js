@@ -21,3 +21,9 @@ export function compileMiriaCode(code) {
     console.error(errorMsg);
   }
 }
+
+export function executeMiriaCode() {
+  // TODO: Make the logic of the execution with the tokens
+  const tokens = store.state.miria.results;
+  console.log(tokens);
+}

@@ -7,7 +7,7 @@
       </div>
       <div class="toolbar">
         <BaseButton icon="wrench" @click="compileCode">Compile</BaseButton>
-        <BaseButton icon="play">Run</BaseButton>
+        <BaseButton icon="play" @click="executeCode">Run</BaseButton>
       </div>
     </div>
     <hr />
@@ -32,7 +32,10 @@
 <script>
   import { mapState, mapGetters } from "vuex";
   import { codemirror } from "vue-codemirror";
-  import { compileMiriaCode } from "../grammar/miria-compiler";
+  import {
+    compileMiriaCode,
+    executeMiriaCode,
+  } from "../grammar/miria-compiler";
   import "codemirror/mode/javascript/javascript.js";
   import "codemirror/lib/codemirror.css";
   import "codemirror/theme/xq-light.css";
@@ -69,6 +72,12 @@
           type = "success";
         }
         this.$swal(message, "See console output for more info", type);
+      },
+      executeCode: function() {
+        this.compileCode();
+        if (!this.compilationFailed) {
+          executeMiriaCode();
+        }
       },
     },
     computed: {
