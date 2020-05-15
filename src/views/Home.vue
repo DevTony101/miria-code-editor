@@ -61,20 +61,14 @@
       compileCode: function() {
         this.showDefaultOutput = false;
         compileMiriaCode(this.code);
+        let message = "Oops! Compilation failed!";
+        let type = "error";
         if (!this.compilationFailed) {
           console.log(this.results);
-          this.$swal(
-            "Compiled successfully!",
-            "See console output for more info",
-            "success"
-          );
-        } else {
-          this.$swal(
-            "Oops! Compiling failed!",
-            "See console output for more info",
-            "error"
-          );
+          message = "Compiled successfully";
+          type = "success";
         }
+        this.$swal(message, "See console output for more info", type);
       },
     },
     computed: {
