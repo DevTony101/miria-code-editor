@@ -15,7 +15,9 @@
       <div class="codemirror-content">
         <codemirror v-model="code" :options="cmOptions"></codemirror>
       </div>
-      <ConsoleOutput />
+      <ConsoleOutput>
+        <pre v-if="this.csoutput">{{ this.csoutput }}</pre>
+      </ConsoleOutput>
     </div>
   </div>
 </template>
@@ -43,8 +45,9 @@
     },
     data: function() {
       return {
-        code: 'a -> String := "Hola Mundo"',
         cmOptions: {},
+        code: 'a -> String := "Hola Mundo"',
+        csoutput: null,
       };
     },
     methods: {
@@ -57,6 +60,7 @@
         } catch (err) {
           const endMsg = err.message.indexOf("Instead");
           let errorMsg = err.message.slice(0, endMsg - 1);
+          this.csoutput = errorMsg;
           this.$swal(
             "Oops! Build failed!",
             "See console output for more info",

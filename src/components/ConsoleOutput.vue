@@ -3,10 +3,12 @@
     <h3 class="title">Console Output</h3>
     <hr />
     <div class="output">
-      <span>
-        The output of your miria code will appear here. <br />
-        (Errors included!)
-      </span>
+      <slot>
+        <span>
+          The output of your miria code will appear here. <br />
+          (Errors included!)
+        </span>
+      </slot>
     </div>
   </div>
 </template>
