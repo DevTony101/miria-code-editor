@@ -16,7 +16,12 @@
         <codemirror v-model="code" :options="cmOptions"></codemirror>
       </div>
       <ConsoleOutput>
-        <pre v-if="this.csoutput">{{ this.csoutput }}</pre>
+        <pre v-if="this.csoutput && this.buildFailed" class="error-msg">
+          {{ this.csoutput }}
+        </pre>
+        <template v-if="this.csoutput && !this.buildFailed">
+          <span class="success-msg">Everything Compiled Successfully!</span>
+        </template>
       </ConsoleOutput>
     </div>
   </div>
@@ -47,11 +52,13 @@
       return {
         cmOptions: {},
         code: 'a -> String := "Hola Mundo"',
+        buildFailed: false,
         csoutput: null,
       };
     },
     methods: {
       compileCode: function() {
+        this.csoutput = "a";
         const parser = getMiriaParser();
         let results = null;
         try {
@@ -61,6 +68,7 @@
           const endMsg = err.message.indexOf("Instead");
           let errorMsg = err.message.slice(0, endMsg - 1);
           this.csoutput = errorMsg;
+          this.buildFailed = true;
           this.$swal(
             "Oops! Build failed!",
             "See console output for more info",

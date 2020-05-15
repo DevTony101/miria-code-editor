@@ -30,4 +30,12 @@
   .output {
     margin-top: 20px;
   }
+
+  .error-msg {
+    color: var(--error-msg);
+  }
+
+  .success-msg {
+    color: var(--success-msg);
+  }
 </style>

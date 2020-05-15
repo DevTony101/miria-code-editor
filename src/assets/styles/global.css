@@ -46,8 +46,11 @@ html {
   --color-accent: var(--blue);
   --color-accent-dark: var(--blue-dark);
   --color-accent-light: var(--blue-light);
+  --error-msg: lightsalmon;
+  --success-msg: lightgreen;
   transition: all .3s ease;
 }
+
 .light-theme {
   --background: var(--gray-0);
   --background-secondary: var(--gray-1);
@@ -61,6 +64,8 @@ html {
   --color-accent: var(--red);
   --color-accent-dark: var(--red-dark);
   --color-accent-light: var(--red-light);
+  --error-msg: crimson;
+  --success-msg: darkgreen;
   transition: all .3s ease;
 }
 
