@@ -12,6 +12,9 @@ export function compileMiriaCode(code) {
   try {
     parser.feed(code);
     store.dispatch("miria/setParserResults", parser.results);
+    if (parser.results.length === 0) {
+      console.warn("Compiled successfully with unexpected end of input");
+    }
   } catch (err) {
     store.dispatch("miria/setCompilationStatus", "failed");
     let errorMsg = err.message;
