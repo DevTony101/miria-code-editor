@@ -5,8 +5,8 @@
     <div class="output">
       <slot>
         <span>
-          The output of your miria code will appear here. <br />
-          (Errors included!)
+          The output of your miria code will appear <br />
+          here. (Errors included!)
         </span>
       </slot>
     </div>
