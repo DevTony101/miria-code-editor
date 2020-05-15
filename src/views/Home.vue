@@ -16,10 +16,10 @@
         <codemirror v-model="code" :options="cmOptions"></codemirror>
       </div>
       <ConsoleOutput>
-        <template v-if="this.isCompiled">
-          <pre v-if="this.compilingFailed" class="error-msg"
-            >{{ this.compilationResult }}
-          </pre>
+        <template v-if="!this.showDefaultOutput">
+          <pre v-if="this.compilationFailed" class="error-msg">{{
+            this.output
+          }}</pre>
           <template v-else>
             <span class="success-msg">Compiled Successfully</span>
           </template>
@@ -30,9 +30,9 @@
 </template>
 
 <script>
-  import { mapState } from "vuex";
+  import { mapState, mapGetters } from "vuex";
   import { codemirror } from "vue-codemirror";
-  import { getMiriaParser } from "../grammar/miria-parser";
+  import { compileMiriaCode } from "../grammar/miria-compiler";
   import "codemirror/mode/javascript/javascript.js";
   import "codemirror/lib/codemirror.css";
   import "codemirror/theme/xq-light.css";
@@ -54,49 +54,34 @@
       return {
         cmOptions: {},
         code: 'a -> String := "Hola Mundo"',
-        isCompiled: false,
-        compilingFailed: false,
-        compilationResult: null,
+        showDefaultOutput: true,
       };
     },
     methods: {
-      outputError: function(err) {
-        let errorMsg = err.message;
-        const endMsg = err.message.indexOf("Instead");
-        if (endMsg !== -1) errorMsg = err.message.slice(0, endMsg - 1);
-        this.compilationResult = errorMsg;
-        this.compilingFailed = true;
-        this.$swal(
-          "Oops! Compiling failed!",
-          "See console output for more info",
-          "error"
-        );
-        console.error(errorMsg);
-      },
       compileCode: function() {
-        this.isCompiled = true;
-        this.compilingFailed = false;
-        const parser = getMiriaParser();
-        let results = null;
-        try {
-          parser.feed(this.code);
-          results = parser.results;
-        } catch (err) {
-          this.outputError(err);
-        }
-        if (!this.compilingFailed) {
-          console.log(results);
+        this.showDefaultOutput = false;
+        compileMiriaCode(this.code);
+        if (!this.compilationFailed) {
+          console.log(this.results);
           this.$swal(
             "Compiled successfully!",
             "See console output for more info",
             "success"
           );
+        } else {
+          this.$swal(
+            "Oops! Compiling failed!",
+            "See console output for more info",
+            "error"
+          );
         }
-        // TODO: Implement run code function that takes this results array
-        return { results };
       },
     },
-    computed: mapState(["theme"]),
+    computed: {
+      ...mapState(["theme"]),
+      ...mapState("miria", ["results", "output", "compilationStatus"]),
+      ...mapGetters("miria", ["compilationFailed"]),
+    },
     watch: {
       // eslint-disable-next-line no-unused-vars
       theme: function(value, oldValue) {
@@ -121,7 +106,7 @@
 
   .miria-code {
     display: grid;
-    grid-template-columns: 800px auto;
+    grid-template-columns: 850px auto;
     column-gap: 2rem;
     height: 520px;
     padding-top: 20px;
