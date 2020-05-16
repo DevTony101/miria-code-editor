@@ -38,7 +38,7 @@ const lexer = moo.compile({
     value: s => Number(s)
   },
   identifier: {
-    match: /[a-z_][a-z_0-9]*/,
+    match: /[a-z_][A-Za-z_0-9]*/,
     type: moo.keywords({
       fun: "fun",
       while: "while",
@@ -98,16 +98,18 @@ top_level_statements -> top_level_statement {% d => [d[0]] %}
 | _ "\n" top_level_statements {% d => d[2] %}
 | _ {% d => [] %}
 
-top_level_statement -> fun_definition {% id %} | line_comment {% id %} | var_assignment {% id %}
+top_level_statement -> fun_definition {% id %} | line_comment {% id %}
+| var_declaration {% id %} | var_definition {% id %} | var_reassignment {% id %}
 
-fun_definition -> "fun" __ identifier _ "(" _ parameter_list _ ")" _ code_block {%
+fun_definition -> "define" __ identifier _ "as" _ "fun" _ "(" _ parameter_list _ ")" _ %define _ %datatype _ code_block {%
   d => ({
     type: "fun_definition",
     name: d[2],
-    parameters: d[6],
-    body: d[10],
+    parameters: d[10],
+    returnType: d[16],
+    body: d[18],
     start: tokenStart(d[0]),
-    end: d[10].end
+    end: d[18].end
   })
 %}
 
@@ -116,7 +118,7 @@ parameter_list -> null {% () => [] %} | identifier {% d => [d[0]] %}
     d => [d[0], ...d[4]]
   %}
 
-code_block -> "[" executable_statements "]" {%
+code_block -> "{" executable_statements "}" {%
   (d) => ({
     type: "code_block",
     statements: d[1],
@@ -132,7 +134,9 @@ executable_statements -> _ {% () => [] %} | _ "\n" executable_statements {% (d) 
   %}
 
 executable_statement -> return_statement {% id %}
-  |  var_assignment       {% id %}
+  |  var_declaration      {% id %}
+  |  var_definition       {% id %}
+  |  var_reassignment     {% id %}
   |  call_statement       {% id %}
   |  line_comment         {% id %}
   |  indexed_assignment   {% id %}
@@ -149,14 +153,34 @@ return_statement -> "return" __ expression {%
   })
 %}
 
-var_assignment -> identifier _ %define _ %datatype  _ %assignment _ expression {%
+var_declaration -> identifier _ %define _ %datatype {%
   d => ({
-    type: "var_assignment",
+    type: "var_declaration",
+    var_name: d[0],
+    datatype: d[4].text,
+    start: d[0].start,
+    end: tokenEnd(d[4])
+  })
+%}
+
+var_definition -> identifier _ %define _ %datatype _ %assignment _ expression {%
+  d => ({
+    type: "var_definition",
     var_name: d[0],
     datatype: d[4].text,
     value: d[8],
     start: d[0].start,
     end: d[8].end
+  })
+%}
+
+var_reassignment -> identifier _ %assignment _ expression {%
+  d => ({
+    type: "var_reassignment",
+    var_name: d[0],
+    value: d[4],
+    start: d[0].start,
+    end: d[4].end
   })
 %}
 
@@ -312,8 +336,7 @@ unary_expression -> number {% id %}
     end: d[0].end
   })
 %}
-|
-fun_expression {% id %} | "(" expression ")" {%
+| "(" expression ")" {%
   data => data[1]
 %}
 
@@ -369,16 +392,6 @@ boolean_literal -> "true" {%
     value: false,
     start: tokenStart(d[0]),
     end: tokenEnd(d[0])
-  })
-%}
-
-fun_expression -> "fun" _ "(" _ parameter_list _ ")" _ code_block {%
-  d => ({
-    type: "fun_expression",
-    parameters: d[4],
-    body: d[8],
-    start: tokenStart(d[0]),
-    end: d[8].end
   })
 %}
 

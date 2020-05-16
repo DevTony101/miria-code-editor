@@ -42,7 +42,7 @@ const lexer = moo.compile({
     value: s => Number(s)
   },
   identifier: {
-    match: /[a-z_][a-z_0-9]*/,
+    match: /[a-z_][A-Za-z_0-9]*/,
     type: moo.keywords({
       fun: "fun",
       while: "while",
@@ -100,15 +100,18 @@ var grammar = {
     {"name": "top_level_statements", "symbols": ["_"], "postprocess": d => []},
     {"name": "top_level_statement", "symbols": ["fun_definition"], "postprocess": id},
     {"name": "top_level_statement", "symbols": ["line_comment"], "postprocess": id},
-    {"name": "top_level_statement", "symbols": ["var_assignment"], "postprocess": id},
-    {"name": "fun_definition", "symbols": [{"literal":"fun"}, "__", "identifier", "_", {"literal":"("}, "_", "parameter_list", "_", {"literal":")"}, "_", "code_block"], "postprocess": 
+    {"name": "top_level_statement", "symbols": ["var_declaration"], "postprocess": id},
+    {"name": "top_level_statement", "symbols": ["var_definition"], "postprocess": id},
+    {"name": "top_level_statement", "symbols": ["var_reassignment"], "postprocess": id},
+    {"name": "fun_definition", "symbols": [{"literal":"define"}, "__", "identifier", "_", {"literal":"as"}, "_", {"literal":"fun"}, "_", {"literal":"("}, "_", "parameter_list", "_", {"literal":")"}, "_", (lexer.has("define") ? {type: "define"} : define), "_", (lexer.has("datatype") ? {type: "datatype"} : datatype), "_", "code_block"], "postprocess": 
         d => ({
           type: "fun_definition",
           name: d[2],
-          parameters: d[6],
-          body: d[10],
+          parameters: d[10],
+          returnType: d[16],
+          body: d[18],
           start: tokenStart(d[0]),
-          end: d[10].end
+          end: d[18].end
         })
         },
     {"name": "parameter_list", "symbols": [], "postprocess": () => []},
@@ -116,7 +119,7 @@ var grammar = {
     {"name": "parameter_list", "symbols": ["identifier", "_", {"literal":","}, "_", "parameter_list"], "postprocess": 
         d => [d[0], ...d[4]]
           },
-    {"name": "code_block", "symbols": [{"literal":"["}, "executable_statements", {"literal":"]"}], "postprocess": 
+    {"name": "code_block", "symbols": [{"literal":"{"}, "executable_statements", {"literal":"}"}], "postprocess": 
         (d) => ({
           type: "code_block",
           statements: d[1],
@@ -131,7 +134,9 @@ var grammar = {
         d => [d[1], ...d[4]]
           },
     {"name": "executable_statement", "symbols": ["return_statement"], "postprocess": id},
-    {"name": "executable_statement", "symbols": ["var_assignment"], "postprocess": id},
+    {"name": "executable_statement", "symbols": ["var_declaration"], "postprocess": id},
+    {"name": "executable_statement", "symbols": ["var_definition"], "postprocess": id},
+    {"name": "executable_statement", "symbols": ["var_reassignment"], "postprocess": id},
     {"name": "executable_statement", "symbols": ["call_statement"], "postprocess": id},
     {"name": "executable_statement", "symbols": ["line_comment"], "postprocess": id},
     {"name": "executable_statement", "symbols": ["indexed_assignment"], "postprocess": id},
@@ -146,14 +151,32 @@ var grammar = {
           end: d[2].end
         })
         },
-    {"name": "var_assignment", "symbols": ["identifier", "_", (lexer.has("define") ? {type: "define"} : define), "_", (lexer.has("datatype") ? {type: "datatype"} : datatype), "_", (lexer.has("assignment") ? {type: "assignment"} : assignment), "_", "expression"], "postprocess": 
+    {"name": "var_declaration", "symbols": ["identifier", "_", (lexer.has("define") ? {type: "define"} : define), "_", (lexer.has("datatype") ? {type: "datatype"} : datatype)], "postprocess": 
         d => ({
-          type: "var_assignment",
+          type: "var_declaration",
+          var_name: d[0],
+          datatype: d[4].text,
+          start: d[0].start,
+          end: tokenEnd(d[4])
+        })
+        },
+    {"name": "var_definition", "symbols": ["identifier", "_", (lexer.has("define") ? {type: "define"} : define), "_", (lexer.has("datatype") ? {type: "datatype"} : datatype), "_", (lexer.has("assignment") ? {type: "assignment"} : assignment), "_", "expression"], "postprocess": 
+        d => ({
+          type: "var_definition",
           var_name: d[0],
           datatype: d[4].text,
           value: d[8],
           start: d[0].start,
           end: d[8].end
+        })
+        },
+    {"name": "var_reassignment", "symbols": ["identifier", "_", (lexer.has("assignment") ? {type: "assignment"} : assignment), "_", "expression"], "postprocess": 
+        d => ({
+          type: "var_reassignment",
+          var_name: d[0],
+          value: d[4],
+          start: d[0].start,
+          end: d[4].end
         })
         },
     {"name": "call_statement", "symbols": ["call_expression"], "postprocess": id},
@@ -305,7 +328,6 @@ var grammar = {
           end: d[0].end
         })
         },
-    {"name": "unary_expression", "symbols": ["fun_expression"], "postprocess": id},
     {"name": "unary_expression", "symbols": [{"literal":"("}, "expression", {"literal":")"}], "postprocess": 
         data => data[1]
         },
@@ -357,15 +379,6 @@ var grammar = {
           value: false,
           start: tokenStart(d[0]),
           end: tokenEnd(d[0])
-        })
-        },
-    {"name": "fun_expression", "symbols": [{"literal":"fun"}, "_", {"literal":"("}, "_", "parameter_list", "_", {"literal":")"}, "_", "code_block"], "postprocess": 
-        d => ({
-          type: "fun_expression",
-          parameters: d[4],
-          body: d[8],
-          start: tokenStart(d[0]),
-          end: d[8].end
         })
         },
     {"name": "line_comment", "symbols": [(lexer.has("comment") ? {type: "comment"} : comment)], "postprocess": convertTokenId},
