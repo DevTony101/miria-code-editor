@@ -36,9 +36,9 @@
     compileMiriaCode,
     executeMiriaCode,
   } from "../grammar/miria-compiler";
-  import "codemirror/mode/javascript/javascript.js";
+  import "codemirror/mode/miria/miria.js";
   import "codemirror/lib/codemirror.css";
-  import "codemirror/theme/xq-light.css";
+  import "codemirror/theme/idea.css";
   import "codemirror/theme/material.css";
   import ConsoleOutput from "../components/ConsoleOutput";
 
@@ -47,8 +47,8 @@
     mounted() {
       this.cmOptions = {
         tabSize: 4,
-        mode: "javascript",
-        theme: this.theme === "light-theme" ? "xq-light" : "material",
+        mode: "miria",
+        theme: this.theme === "light-theme" ? "idea" : "material",
         lineNumbers: true,
         line: true,
       };
@@ -90,7 +90,7 @@
       theme: function(value, oldValue) {
         this.cmOptions = {
           ...this.cmOptions,
-          theme: value === "light-theme" ? "xq-light" : "material",
+          theme: value === "light-theme" ? "idea" : "material",
         };
       },
     },
