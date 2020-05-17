@@ -28,7 +28,7 @@ const lexer = moo.compile({
   divide: "/",
   modulo: "%",
   colon: ":",
-  datatype: ["String", "Number", "Boolean"],
+  datatype: ["String", "Number", "Boolean", "void"],
   comment: {
     match: /#[^\n]*/,
     value: s => s.substring(1)
@@ -103,12 +103,13 @@ var grammar = {
     {"name": "top_level_statement", "symbols": ["var_declaration"], "postprocess": id},
     {"name": "top_level_statement", "symbols": ["var_definition"], "postprocess": id},
     {"name": "top_level_statement", "symbols": ["var_reassignment"], "postprocess": id},
+    {"name": "top_level_statement", "symbols": ["for_loop"]},
     {"name": "fun_definition", "symbols": [{"literal":"define"}, "__", "identifier", "_", {"literal":"as"}, "_", {"literal":"fun"}, "_", {"literal":"("}, "_", "parameter_list", "_", {"literal":")"}, "_", (lexer.has("define") ? {type: "define"} : define), "_", (lexer.has("datatype") ? {type: "datatype"} : datatype), "_", "code_block"], "postprocess": 
         d => ({
           type: "fun_definition",
           name: d[2],
           parameters: d[10],
-          returnType: d[16],
+          returnType: d[16].text,
           body: d[18],
           start: tokenStart(d[0]),
           end: d[18].end
@@ -246,14 +247,24 @@ var grammar = {
           end: d[8].end
         })
         },
-    {"name": "for_loop", "symbols": [{"literal":"for"}, "__", "identifier", "__", {"literal":"in"}, "__", "expression", "_", "code_block"], "postprocess": 
+    {"name": "for_loop", "symbols": [{"literal":"for"}, "_", {"literal":"("}, "_", "var_declaration", "_", {"literal":"in"}, "_", "call_expression", "_", {"literal":")"}, "_", "code_block"], "postprocess": 
         d => ({
           type: "for_loop",
-          loop_variable: d[2],
-          iterable: d[6],
-          body: d[8],
+          loop_variable: d[4],
+          iterable: d[8],
+          body: d[12],
           start: tokenStart(d[0]),
-          end: d[8].end
+          end: d[12].end
+        })
+        },
+    {"name": "for_loop", "symbols": [{"literal":"for"}, "_", {"literal":"("}, "_", "identifier", "_", {"literal":"in"}, "_", "call_expression", "_", {"literal":")"}, "_", "code_block"], "postprocess": 
+        d => ({
+          type: "for_loop",
+          loop_variable: d[4],
+          iterable: d[8],
+          body: d[12],
+          start: tokenStart(d[0]),
+          end: d[12].end
         })
         },
     {"name": "argument_list", "symbols": [], "postprocess": () => []},

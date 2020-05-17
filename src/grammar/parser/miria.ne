@@ -24,7 +24,7 @@ const lexer = moo.compile({
   divide: "/",
   modulo: "%",
   colon: ":",
-  datatype: ["String", "Number", "Boolean"],
+  datatype: ["String", "Number", "Boolean", "void"],
   comment: {
     match: /#[^\n]*/,
     value: s => s.substring(1)
@@ -100,13 +100,14 @@ top_level_statements -> top_level_statement {% d => [d[0]] %}
 
 top_level_statement -> fun_definition {% id %} | line_comment {% id %}
 | var_declaration {% id %} | var_definition {% id %} | var_reassignment {% id %}
+| for_loop
 
 fun_definition -> "define" __ identifier _ "as" _ "fun" _ "(" _ parameter_list _ ")" _ %define _ %datatype _ code_block {%
   d => ({
     type: "fun_definition",
     name: d[2],
     parameters: d[10],
-    returnType: d[16],
+    returnType: d[16].text,
     body: d[18],
     start: tokenStart(d[0]),
     end: d[18].end
@@ -257,14 +258,24 @@ if_statement -> "if" __ expression __ code_block {%
   })
 %}
 
-for_loop -> "for" __ identifier __ "in" __ expression _ code_block {%
+for_loop -> "for" _ "(" _ var_declaration _ "in" _ call_expression _ ")" _ code_block {%
   d => ({
     type: "for_loop",
-    loop_variable: d[2],
-    iterable: d[6],
-    body: d[8],
+    loop_variable: d[4],
+    iterable: d[8],
+    body: d[12],
     start: tokenStart(d[0]),
-    end: d[8].end
+    end: d[12].end
+  })
+%}
+| "for" _ "(" _ identifier _ "in" _ call_expression _ ")" _ code_block {%
+  d => ({
+    type: "for_loop",
+    loop_variable: d[4],
+    iterable: d[8],
+    body: d[12],
+    start: tokenStart(d[0]),
+    end: d[12].end
   })
 %}
 
