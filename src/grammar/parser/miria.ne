@@ -101,8 +101,6 @@ top_level_statements -> top_level_statement {% d => [d[0]] %}
 | _ {% d => [] %}
 
 top_level_statement -> fun_definition {% id %} | line_comment {% id %}
-| var_declaration {% id %} | var_definition {% id %} | var_reassignment {% id %}
-| for_loop | while_loop | do_while_loop | if_statement
 
 fun_definition -> "define" __ identifier _ "as" _ "fun" _ "(" _ parameter_list _ ")" _ %define _ %datatype _ code_block {%
   d => ({
@@ -144,6 +142,7 @@ executable_statement -> return_statement {% id %}
   |  line_comment         {% id %}
   |  indexed_assignment   {% id %}
   |  while_loop           {% id %}
+  |  do_while_loop        {% id %}
   |  if_statement         {% id %}
   |  for_loop             {% id %}
 
