@@ -133,7 +133,7 @@ strong {
 
 .CodeMirror {
   border-radius: 0.5em;
-  height: 100% !important;
+  height: 520px !important;
 }
 
 ::-webkit-scrollbar {
