@@ -24,7 +24,7 @@ const lexer = moo.compile({
   divide: "/",
   modulo: "%",
   colon: ":",
-  datatype: ["String", "Number", "Boolean", "void"],
+  datatype: ["string", "number", "boolean", "void"],
   comment: {
     match: /#[^\n]*/,
     value: s => s.substring(1)
@@ -46,6 +46,8 @@ const lexer = moo.compile({
       else: "else",
       in: "in",
       if: "if",
+      evaluate: "evaluate",
+      not: "not",
       return: "return",
       and: "and",
       or: "or",
@@ -100,7 +102,7 @@ top_level_statements -> top_level_statement {% d => [d[0]] %}
 
 top_level_statement -> fun_definition {% id %} | line_comment {% id %}
 | var_declaration {% id %} | var_definition {% id %} | var_reassignment {% id %}
-| for_loop
+| for_loop | while_loop | do_while_loop | if_statement
 
 fun_definition -> "define" __ identifier _ "as" _ "fun" _ "(" _ parameter_list _ ")" _ %define _ %datatype _ code_block {%
   d => ({
@@ -218,47 +220,57 @@ indexed_assignment -> unary_expression _ "[" _ expression _ "]" _ "=" _ expressi
   })
 %}
 
-while_loop -> "while" __ expression __ code_block {%
+while_loop -> "repeat" _ code_block _ "while" _ "(" _ expression _ ")" {%
   d => ({
     type: "while_loop",
-    condition: d[2],
+    condition: d[8],
+    body: d[2],
+    start: tokenStart(d[0]),
+    end: d[10].end
+  })
+%}
+
+do_while_loop -> "once" _ "repeat" _ code_block _ "while" _ "(" _ expression _ ")" {%
+  d => ({
+    type: "do_while_loop",
+    condition: d[10],
     body: d[4],
     start: tokenStart(d[0]),
-    end: d[4].end
+    end: d[12].end
   })
 %}
 
-if_statement -> "if" __ expression __ code_block {%
+if_statement -> "evaluate" _ "if" _ "(" _ expression _ ")" _ code_block {%
   d => ({
     type: "if_statement",
-    condition: d[2],
-    consequent: d[4],
+    condition: d[6],
+    consequent: d[10],
     start: tokenStart(d[0]),
-    end: d[4].end
+    end: d[10].end
   })
 %} | 
-"if" __ expression _ code_block _ "else" __ code_block {%
+"evaluate" _ "if" _ "(" _ expression _ ")" _ code_block _ "if" _ "not" _ code_block {%
   d => ({
     type: "if_statement",
-    condition: d[2],
-    consequent: d[4],
-    alternate: d[8],
+    condition: d[6],
+    consequent: d[10],
+    alternate: d[16],
     start: tokenStart(d[0]),
-    end: d[8].end
+    end: d[16].end
   })
 %} | 
-"if" __ expression _ code_block _ "else" __ if_statement {%
+"evaluate" _ "if" _ "(" _ expression _ ")" _ code_block _ "else" _ if_statement {%
   d => ({
     type: "if_statement",
-    condition: d[2],
-    consequent: d[4],
-    alternate: d[8],
+    condition: d[6],
+    consequent: d[10],
+    alternate: d[14],
     start: tokenStart(d[0]),
-    end: d[8].end
+    end: d[14].end
   })
 %}
 
-for_loop -> "for" _ "(" _ var_declaration _ "in" _ call_expression _ ")" _ code_block {%
+for_loop -> "foreach" _ "(" _ var_declaration _ "in" _ call_expression _ ")" _ code_block {%
   d => ({
     type: "for_loop",
     loop_variable: d[4],
@@ -268,7 +280,7 @@ for_loop -> "for" _ "(" _ var_declaration _ "in" _ call_expression _ ")" _ code_
     end: d[12].end
   })
 %}
-| "for" _ "(" _ identifier _ "in" _ call_expression _ ")" _ code_block {%
+| "foreach" _ "(" _ identifier _ "in" _ call_expression _ ")" _ code_block {%
   d => ({
     type: "for_loop",
     loop_variable: d[4],
@@ -286,7 +298,8 @@ argument_list -> null {% () => [] %} | _ expression _  {% d => [d[1]] %}
 
 expression -> boolean_expression {% id %}
 
-boolean_expression -> comparison_expression {% id %} | comparison_expression _ boolean_operator _ boolean_expression {%
+boolean_expression -> boolean_negation {% id %} | comparison_expression {% id %}
+| comparison_expression _ boolean_operator _ boolean_expression {%
   d => ({
     type: "binary_operation",
     operator: convertToken(d[2]),
@@ -294,6 +307,15 @@ boolean_expression -> comparison_expression {% id %} | comparison_expression _ b
     right: d[4],
     start: d[0].start,
     end: d[4].end
+  })
+%} 
+
+boolean_negation -> "not" _ expression {%
+  d => ({
+    type: "boolean_negation",
+    expression: d[2],
+    start: tokenStart(d[0]),
+    end: d[2].end
   })
 %}
 
@@ -336,10 +358,9 @@ multiplicative_expression -> unary_expression {% id %} | unary_expression _ [*/%
   })
 %}
 
-unary_expression -> number {% id %} 
-| call_expression {% id %} | string_literal {% id %} | list_literal {% id %}
-| dictionary_literal {% id %} | boolean_literal {% id %} | indexed_access {% id %}
-| identifier {%
+unary_expression -> number {% id %}
+| call_expression {% id %} | string_literal {% id %} | boolean_literal {% id %} 
+| indexed_access {% id %} | identifier {%
   d => ({
     type: "var_reference",
     var_name: d[0],
@@ -349,44 +370,6 @@ unary_expression -> number {% id %}
 %}
 | "(" expression ")" {%
   data => data[1]
-%}
-
-list_literal -> "[" list_items "]" {%
-  d => ({
-    type: "list_literal",
-    items: d[1],
-    start: tokenStart(d[0]),
-    end: tokenEnd(d[2])
-  })
-%}
-
-list_items -> null {% () => [] %}| _ml expression _ml {% d => [d[1]] %} |
-_ml expression _ml "," list_items {%
-  d => [
-    d[1],
-    ...d[4]
-  ]
-%}
-
-dictionary_literal -> "{" dictionary_entries "}" {%
-  d => ({
-    type: "dictionary_literal",
-    entries: d[1],
-    start: tokenStart(d[0]),
-    end: tokenEnd(d[2])
-  })
-%}
-
-dictionary_entries -> null  {% () => [] %} | 
-_ml dictionary_entry _ml {%
-  d => [d[1]]
-%} |  
-_ml dictionary_entry _ml "," dictionary_entries {%
-  d => [d[1], ...d[4]]
-%}
-
-dictionary_entry -> identifier _ml ":" _ml expression {%
-  d => [d[0], d[4]]
 %}
 
 boolean_literal -> "true" {%
