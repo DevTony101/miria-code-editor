@@ -42,18 +42,7 @@ export function executeMiriaCode() {
     if (mainFun.returnType === "void") {
       for (const token of tokens) {
         const statements = token.body.statements;
-        for (const statement of statements) {
-          if (["var_definition", "var_declaration"].includes(statement.type)) {
-            variableAssignment(variables, statement);
-          } else if (statement.type === "var_reassignment") {
-            variableReassignment(variables, statement);
-          } else if (statement.type === "call_expression") {
-            functionCall(variables, {
-              ...statement,
-              args: statement.arguments,
-            });
-          }
-        }
+        processStatements(variables, statements);
       }
     } else {
       store.dispatch("miria/setExecutionStatus", "failed");
@@ -65,6 +54,24 @@ export function executeMiriaCode() {
   } else {
     store.dispatch("miria/setExecutionStatus", "failed");
     store.dispatch("miria/setConsoleOutput", "Error: No function named main");
+  }
+}
+
+function processStatements(map, statements) {
+  console.log(statements);
+  for (const statement of statements) {
+    if (["var_definition", "var_declaration"].includes(statement.type)) {
+      variableAssignment(map, statement);
+    } else if (statement.type === "var_reassignment") {
+      variableReassignment(map, statement);
+    } else if (statement.type === "call_expression") {
+      functionCall(map, {
+        ...statement,
+        args: statement.arguments,
+      });
+    } else if (statement.type === "if_statement") {
+      ifStatement(map, statement);
+    }
   }
 }
 
@@ -114,6 +121,61 @@ function functionCall(map, { fun_name, args }) {
       ) {
         flushToOutput(`${arg.value}\n`);
       }
+    }
+  }
+}
+
+function ifStatement(map, { condition, consequent, alternate }) {
+  if (condition.type === "boolean_literal") {
+    processIfStatements(condition.value);
+  } else if (condition.type === "binary_operation") {
+    processIfStatements(evaluateBooleanExpression(map, condition));
+  }
+
+  function processIfStatements(value) {
+    if (value) {
+      processStatements(map, consequent.statements);
+    } else {
+      if (alternate) {
+        if (alternate.type === "if_statement") {
+          ifStatement(map, alternate);
+        } else {
+          processStatements(map, alternate.statements);
+        }
+      }
+    }
+  }
+}
+
+function evaluateBooleanExpression(map, { left, operator, right }) {
+  left = evaluateOperator(map, left);
+  right = evaluateOperator(map, right);
+  if (operator.type === "and") {
+    operator = "&&";
+  } else if (operator.type === "or") {
+    operator = "||";
+  } else {
+    operator = operator.value;
+  }
+  return eval(`${left} ${operator} ${right}`);
+}
+
+function evaluateOperator(map, operator) {
+  if (operator.type === "binary_operation") {
+    return evaluateBooleanExpression(map, operator);
+  } else if (["boolean_literal", "number_literal"].includes(operator.type)) {
+    return operator.value;
+  } else if (operator.type === "string_literal") {
+    return operator.value.charCodeAt(0);
+  } else if (operator.type === "var_reference") {
+    const payload = map.get(operator.var_name.value);
+    if (payload.datatype === "string") {
+      return payload.value
+        .split("")
+        .map(x => x.charCodeAt(0))
+        .reduce((a, b) => a + b);
+    } else {
+      return payload.value;
     }
   }
 }
