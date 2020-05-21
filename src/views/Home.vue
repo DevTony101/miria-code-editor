@@ -17,10 +17,11 @@
       </div>
       <ConsoleOutput>
         <template v-if="!this.showDefaultOutput">
-          <pre v-if="this.compilationFailed" class="error-msg">{{
+          <pre v-if="this.codeHasErrors" class="error-msg">{{
             this.output
           }}</pre>
           <template v-else>
+            <pre v-if="this.wasExecuted">{{ this.output }}</pre>
             <span class="success-msg">Compiled Successfully</span>
           </template>
         </template>
@@ -56,34 +57,45 @@
     data: function() {
       return {
         cmOptions: {},
-        code: 'a -> String := "Hola Mundo"',
+        code: "define main as fun() -> void {\n}",
         showDefaultOutput: true,
+        wasExecuted: false,
       };
     },
     methods: {
-      compileCode: function() {
-        this.showDefaultOutput = false;
-        compileMiriaCode(this.code);
-        let message = "Oops! Compilation failed!";
+      showSwalModal: function(subject, isSuccess) {
+        let message = `Oops! ${subject} failed!`;
         let type = "error";
-        if (!this.compilationFailed) {
+        if (isSuccess) {
           console.log(this.results);
-          message = "Compiled successfully";
+          message = `${subject} was successful`;
           type = "success";
         }
         this.$swal(message, "See console output for more info", type);
       },
+      compileCode: function() {
+        this.showDefaultOutput = false;
+        this.wasExecuted = false;
+        compileMiriaCode(this.code);
+        this.showSwalModal("Compilation", !this.compilationFailed);
+      },
       executeCode: function() {
-        this.compileCode();
+        this.showDefaultOutput = false;
+        compileMiriaCode(this.code);
         if (!this.compilationFailed) {
           executeMiriaCode();
+          this.wasExecuted = true;
+          this.showSwalModal("Execution", !this.executionFailed);
         }
       },
     },
     computed: {
       ...mapState(["theme"]),
-      ...mapState("miria", ["results", "output", "compilationStatus"]),
-      ...mapGetters("miria", ["compilationFailed"]),
+      ...mapState("miria", ["results", "output"]),
+      ...mapGetters("miria", ["compilationFailed", "executionFailed"]),
+      codeHasErrors: function() {
+        return this.compilationFailed || this.executionFailed;
+      },
     },
     watch: {
       // eslint-disable-next-line no-unused-vars

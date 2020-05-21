@@ -3,6 +3,7 @@ export const state = {
   output: "",
   results: null,
   compilationStatus: "success",
+  executionStatus: "success",
 };
 
 export const mutations = {
@@ -14,6 +15,9 @@ export const mutations = {
   },
   SET_COMPILATION_STATUS: function(state, status) {
     state.compilationStatus = status;
+  },
+  SET_EXECUTION_STATUS: function(state, status) {
+    state.executionStatus = status;
   },
 };
 
@@ -27,10 +31,16 @@ export const actions = {
   setCompilationStatus: function({ commit }, status) {
     commit("SET_COMPILATION_STATUS", status);
   },
+  setExecutionStatus: function({ commit }, status) {
+    commit("SET_EXECUTION_STATUS", status);
+  },
 };
 
 export const getters = {
   compilationFailed: function(state) {
     return state.compilationStatus === "failed";
+  },
+  executionFailed: function(state) {
+    return state.executionStatus === "failed";
   },
 };
