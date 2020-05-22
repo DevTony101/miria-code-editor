@@ -85,7 +85,13 @@
         if (!this.compilationFailed) {
           executeMiriaCode();
           this.wasExecuted = true;
-          this.showSwalModal("Execution", !this.executionFailed);
+          if (this.executionFailed) {
+            this.showSwalModal("Execution", false);
+          } else {
+            if (this.output.length === 0) {
+              this.showSwalModal("Execution", true);
+            }
+          }
         }
       },
     },
