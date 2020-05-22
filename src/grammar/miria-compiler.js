@@ -1,4 +1,5 @@
 import store from "../store/index";
+
 const nearley = require("nearley");
 const miria = require("./parser/miria");
 
@@ -71,13 +72,21 @@ function processStatements(map, statements) {
       });
     } else if (statement.type === "if_statement") {
       ifStatement(map, statement);
+    } else if (statement.type === "for_loop") {
+      forLoopStatement(map, statement);
     }
   }
 }
 
 function variableAssignment(map, { var_name, datatype, value }) {
   var_name = var_name.value;
-  value = value.value;
+  if (value) {
+    if (value?.type === "var_reference") {
+      value = map.get(value.var_name.value).value;
+    } else {
+      value = value.value;
+    }
+  }
   if (datatype === "string") {
     if (!value) value = "";
     map.set(var_name, {
@@ -122,6 +131,18 @@ function functionCall(map, { fun_name, args }) {
         flushToOutput(`${arg.value}\n`);
       }
     }
+  } else if (fun_name.value === "range") {
+    if (args.length === 0) {
+      throw new Error();
+    } else if (args.length === 2) {
+      let a = evaluateOperator(map, args[0]);
+      let b = evaluateOperator(map, args[1]);
+      return Array(Math.abs(a - b))
+        .fill(0)
+        .map(() => a++);
+    } else if (args.length > 2) {
+      throw new Error("");
+    }
   }
 }
 
@@ -145,6 +166,30 @@ function ifStatement(map, { condition, consequent, alternate }) {
           processStatements(map, alternate.statements);
         }
       }
+    }
+  }
+}
+
+function forLoopStatement(map, { loop_variable, iterable, body }) {
+  if (loop_variable.type === "var_declaration") {
+    variableAssignment(map, loop_variable);
+  } else if (loop_variable.type === "identifier") {
+    if (!map.has(loop_variable.value)) {
+      throw new Error("");
+    }
+  }
+
+  if (iterable.type === "call_expression") {
+    const iter = functionCall(map, { ...iterable, args: iterable.arguments });
+    for (let i of iter) {
+      if (loop_variable.var_name) {
+        const payload = { ...map.get(loop_variable.var_name.value), value: i };
+        map.set(loop_variable.var_name.value, payload);
+      } else {
+        const payload = { ...map.get(loop_variable.value), value: i };
+        map.set(loop_variable.value, payload);
+      }
+      processStatements(map, body.statements);
     }
   }
 }
