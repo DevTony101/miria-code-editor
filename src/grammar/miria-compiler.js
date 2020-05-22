@@ -128,6 +128,8 @@ function functionCall(map, { fun_name, args }) {
 function ifStatement(map, { condition, consequent, alternate }) {
   if (condition.type === "boolean_literal") {
     processIfStatements(condition.value);
+  } else if (condition.type === "var_reference") {
+    processIfStatements(evaluateOperator(map, condition));
   } else if (condition.type === "binary_operation") {
     processIfStatements(evaluateBooleanExpression(map, condition));
   }
@@ -166,7 +168,10 @@ function evaluateOperator(map, operator) {
   } else if (["boolean_literal", "number_literal"].includes(operator.type)) {
     return operator.value;
   } else if (operator.type === "string_literal") {
-    return operator.value.charCodeAt(0);
+    return operator.value
+      .split("")
+      .map(x => x.charCodeAt(0))
+      .reduce((a, b) => a + b);
   } else if (operator.type === "var_reference") {
     const payload = map.get(operator.var_name.value);
     if (payload.datatype === "string") {

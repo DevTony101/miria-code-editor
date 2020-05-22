@@ -9,6 +9,7 @@ const lexer = moo.compile({
   gte: ">=",
   gt: ">",
   eq: "==",
+  neq: "!=",
   lparan: "(",
   rparan: ")",
   comma: ",",
@@ -333,7 +334,7 @@ comparison_expression -> additive_expression {% id %} | additive_expression _ co
 
 comparison_operator -> ">" {% convertTokenId %} | ">=" {% convertTokenId %}
 | "<" {% convertTokenId %} | "<=" {% convertTokenId %}
-| "==" {% convertTokenId %}
+| "==" {% convertTokenId %} | "!=" {% convertTokenId %}
 
 additive_expression -> multiplicative_expression {% id %} | multiplicative_expression _ [+-] _ additive_expression {%
   d => ({
