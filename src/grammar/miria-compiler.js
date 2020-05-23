@@ -16,7 +16,7 @@ export function compileMiriaCode(code) {
     parser.feed(code);
     store.dispatch("miria/setParserResults", parser.results);
     if (parser.results.length === 0) {
-      console.warn("Compiled successfully with unexpected end of input");
+      console.warn("Compiled successfully with unexpected end of| input");
     }
   } catch (err) {
     store.dispatch("miria/setCompilationStatus", "failed");
@@ -139,13 +139,19 @@ function variableReassignment(map, token) {
 }
 
 function functionCall(map, { fun_name, args }) {
-  console.log(map);
   if (fun_name.value === "log") {
     for (const arg of args) {
       if (arg.type === "var_reference") {
         let var_name = arg.var_name.value;
         if (map.has(var_name)) {
           flushToOutput(`${map.get(var_name).value}\n`);
+        } else {
+          logError(
+            {},
+            `Error - Variable ${var_name} referenced but\nnever defined`,
+            false,
+            false
+          );
         }
       } else if (arg.type === "binary_operation") {
         flushToOutput(`${evaluateExpression(map, arg)}\n`);
@@ -155,16 +161,33 @@ function functionCall(map, { fun_name, args }) {
     }
   } else if (fun_name.value === "range") {
     if (args.length === 0) {
-      throw new Error();
+      logError(
+        {},
+        `Error - Range function should take\nexactly 2 arguments, none were given`,
+        false,
+        false
+      );
+    } else if (args.length === 1) {
+      let b = evaluateOperator(map, args[0]);
+      return range(0, b);
     } else if (args.length === 2) {
       let a = evaluateOperator(map, args[0]);
       let b = evaluateOperator(map, args[1]);
-      return Array(Math.abs(a - b))
-        .fill(0)
-        .map(() => a++);
+      return range(a, b);
     } else if (args.length > 2) {
-      throw new Error("");
+      logError(
+        {},
+        `Error - Range function should take\nexactly 2 arguments, ${args.length} were given`,
+        false,
+        false
+      );
     }
+  }
+
+  function range(a, b) {
+    return Array(Math.abs(a - b))
+      .fill(0)
+      .map(() => a++);
   }
 }
 
@@ -268,11 +291,15 @@ function evaluateOperator(map, operator) {
   }
 }
 
-function logError(token, message, showDetails = true) {
+function logError(token, message, showDetails = true, needsFormatting = true) {
   // TODO: Establish a hierarchy in errors so previous errors that are more important dont get deleted
   store.dispatch("miria/setConsoleOutput", "");
   store.dispatch("miria/setExecutionStatus", "failed");
-  flushToOutput(formatError(token, message, showDetails));
+  if (needsFormatting) {
+    flushToOutput(formatError(token, message, showDetails));
+  } else {
+    flushToOutput(message);
+  }
 }
 
 function formatError({ start, var_name }, message, showDetails = true) {
