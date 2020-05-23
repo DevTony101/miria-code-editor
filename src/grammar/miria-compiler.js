@@ -83,6 +83,8 @@ function variableAssignment(map, { var_name, datatype, value }) {
   if (value) {
     if (value?.type === "var_reference") {
       value = map.get(value.var_name.value).value;
+    } else if (value?.type === "binary_operation") {
+      value = evaluateExpression(map, value);
     } else {
       value = value.value;
     }
@@ -123,6 +125,8 @@ function functionCall(map, { fun_name, args }) {
         if (map.has(var_name)) {
           flushToOutput(`${map.get(var_name).value}\n`);
         }
+      } else if (arg.type === "binary_operation") {
+        flushToOutput(`${evaluateExpression(map, arg)}\n`);
       } else if (
         ["string_literal", "number_literal", "boolean_literal"].includes(
           arg.type
@@ -152,7 +156,7 @@ function ifStatement(map, { condition, consequent, alternate }) {
   } else if (condition.type === "var_reference") {
     processIfStatements(evaluateOperator(map, condition));
   } else if (condition.type === "binary_operation") {
-    processIfStatements(evaluateBooleanExpression(map, condition));
+    processIfStatements(evaluateExpression(map, condition));
   }
 
   function processIfStatements(value) {
@@ -194,9 +198,23 @@ function forLoopStatement(map, { loop_variable, iterable, body }) {
   }
 }
 
-function evaluateBooleanExpression(map, { left, operator, right }) {
+function evaluateExpression(map, { left, operator, right }) {
   left = evaluateOperator(map, left);
   right = evaluateOperator(map, right);
+  const stringConcat = typeof left === "string" || typeof right === "string";
+  if (stringConcat && operator.value === "+") {
+    return left + right;
+  } else if (stringConcat && operator.value !== "+") {
+    left = left
+      .split("")
+      .map(x => x.charCodeAt(0))
+      .reduce((a, b) => a + b);
+    right = right
+      .split("")
+      .map(x => x.charCodeAt(0))
+      .reduce((a, b) => a + b);
+  }
+
   if (operator.type === "and") {
     operator = "&&";
   } else if (operator.type === "or") {
@@ -204,29 +222,22 @@ function evaluateBooleanExpression(map, { left, operator, right }) {
   } else {
     operator = operator.value;
   }
+
   return eval(`${left} ${operator} ${right}`);
 }
 
 function evaluateOperator(map, operator) {
   if (operator.type === "binary_operation") {
-    return evaluateBooleanExpression(map, operator);
-  } else if (["boolean_literal", "number_literal"].includes(operator.type)) {
+    return evaluateExpression(map, operator);
+  } else if (
+    ["boolean_literal", "number_literal", "string_literal"].includes(
+      operator.type
+    )
+  ) {
     return operator.value;
-  } else if (operator.type === "string_literal") {
-    return operator.value
-      .split("")
-      .map(x => x.charCodeAt(0))
-      .reduce((a, b) => a + b);
   } else if (operator.type === "var_reference") {
     const payload = map.get(operator.var_name.value);
-    if (payload.datatype === "string") {
-      return payload.value
-        .split("")
-        .map(x => x.charCodeAt(0))
-        .reduce((a, b) => a + b);
-    } else {
-      return payload.value;
-    }
+    return payload.value;
   }
 }
 
