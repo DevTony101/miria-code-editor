@@ -66,7 +66,7 @@ function processStatements(map, statements) {
       break;
     } else {
       if (["var_definition", "var_declaration"].includes(statement.type)) {
-        variableAssignment(map, statement);
+        variableAssignment(map, statement, true);
       } else if (statement.type === "var_reassignment") {
         variableReassignment(map, statement);
       } else if (statement.type === "call_expression") {
@@ -83,10 +83,17 @@ function processStatements(map, statements) {
   }
 }
 
-function variableAssignment(map, token) {
+function variableAssignment(map, token, checkIfExist = false) {
   const var_name = token.var_name.value;
   const datatype = token.datatype;
   let value = token.value;
+
+  if (checkIfExist) {
+    if (map.has(var_name)) {
+      logError(token, `Error: Variable ${var_name} already exists\n`);
+      return;
+    }
+  }
 
   if (value) {
     if (value?.type === "var_reference") {
@@ -107,7 +114,6 @@ function variableAssignment(map, token) {
     }
   } else if (datatype === "number") {
     if (["boolean", "string"].includes(typeof value)) {
-      console.log(typeof value);
       logError(token, `Error: Datatype number\nbut storing a ${typeof value}`);
     } else {
       if (value === undefined) value = 0;
@@ -124,10 +130,11 @@ function variableAssignment(map, token) {
   console.log(map);
 }
 
-function variableReassignment(map, { var_name, value }) {
+function variableReassignment(map, token) {
+  const { var_name } = token;
   if (map.has(var_name.value)) {
     let datatype = map.get(var_name.value).datatype;
-    variableAssignment(map, { var_name, datatype, value });
+    variableAssignment(map, { ...token, datatype });
   }
 }
 
@@ -254,10 +261,16 @@ function logError(token, message) {
   flushToOutput(formatError(token, message));
 }
 
-function formatError({ start, type, var_name }, message) {
+function formatError({ start, var_name }, message) {
   const { line, col } = start;
-  message += " at line " + line + " col " + col + ":\n\n";
-  message += "  " + (type === "var_definition" ? var_name.value : "s") + "\n";
+  message +=
+    (message[message.length] === "\n" ? " " : "") +
+    "at line " +
+    line +
+    " col " +
+    col +
+    ":\n\n";
+  message += "  " + var_name.value + "\n";
   message += "  " + Array(col).join(" ") + "^";
   return message;
 }
