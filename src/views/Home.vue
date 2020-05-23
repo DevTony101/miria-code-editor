@@ -22,6 +22,7 @@
           }}</pre>
           <template v-else>
             <pre v-if="this.wasExecuted">{{ this.output }}</pre>
+            <hr v-if="this.output.length !== 0" />
             <span class="success-msg">Compiled Successfully</span>
           </template>
         </template>
@@ -85,13 +86,11 @@
         if (!this.compilationFailed) {
           executeMiriaCode();
           this.wasExecuted = true;
-          if (this.executionFailed) {
-            this.showSwalModal("Execution", false);
-          } else {
-            if (this.output.length === 0) {
-              this.showSwalModal("Execution", true);
-            }
+          if (this.output.length === 0) {
+            this.showSwalModal("Execution", true);
           }
+        } else {
+          this.showSwalModal("Execution", false);
         }
       },
     },

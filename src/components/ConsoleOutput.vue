@@ -23,8 +23,9 @@
   .console-output {
     background-color: var(--background-secondary);
     border-radius: 0.5em;
-    padding: 20px;
-    padding-top: 10px;
+    padding: 10px 20px 20px;
+    overflow-y: scroll;
+    overflow-x: auto;
   }
 
   .output {
