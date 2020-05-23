@@ -90,14 +90,14 @@ function variableAssignment(map, token, checkIfExist = false) {
 
   if (checkIfExist) {
     if (map.has(var_name)) {
-      logError(token, `Error: Variable ${var_name} already exists\n`);
+      logError(token, `Error - Variable ${var_name} already exists\n`);
       return;
     }
   }
 
   if (value) {
     if (value?.type === "var_reference") {
-      value = map.get(value.var_name.value).value;
+      value = evaluateOperator(map, value);
     } else if (value?.type === "binary_operation") {
       value = evaluateExpression(map, value);
     } else {
@@ -107,14 +107,14 @@ function variableAssignment(map, token, checkIfExist = false) {
 
   if (datatype === "string") {
     if (["boolean", "number"].includes(typeof value)) {
-      logError(token, `Error: Datatype string\nbut storing a ${typeof value}`);
+      logError(token, `Error - Datatype string\nbut storing a ${typeof value}`);
     } else {
       if (value === undefined) value = "";
       map.set(var_name, { datatype, value });
     }
   } else if (datatype === "number") {
     if (["boolean", "string"].includes(typeof value)) {
-      logError(token, `Error: Datatype number\nbut storing a ${typeof value}`);
+      logError(token, `Error - Datatype number\nbut storing a ${typeof value}`);
     } else {
       if (value === undefined) value = 0;
       if (!Number.isNaN(Number(value))) {
@@ -197,7 +197,11 @@ function forLoopStatement(map, { loop_variable, iterable, body }) {
     variableAssignment(map, loop_variable);
   } else if (loop_variable.type === "identifier") {
     if (!map.has(loop_variable.value)) {
-      throw new Error("");
+      logError(
+        loop_variable,
+        `Error - Variable ${loop_variable.value} referenced but\nnever defined`,
+        false
+      );
     }
   }
 
@@ -251,27 +255,40 @@ function evaluateOperator(map, operator) {
     return operator.value;
   } else if (operator.type === "var_reference") {
     const payload = map.get(operator.var_name.value);
-    return payload.value;
+    console.log(payload);
+    if (payload === undefined) {
+      logError(
+        operator,
+        `Error - Variable ${operator.var_name.value} referenced but\nnever defined`,
+        false
+      );
+    } else {
+      return payload.value;
+    }
   }
 }
 
-function logError(token, message) {
+function logError(token, message, showDetails = true) {
+  // TODO: Establish a hierarchy in errors so previous errors that are more important dont get deleted
   store.dispatch("miria/setConsoleOutput", "");
   store.dispatch("miria/setExecutionStatus", "failed");
-  flushToOutput(formatError(token, message));
+  flushToOutput(formatError(token, message, showDetails));
 }
 
-function formatError({ start, var_name }, message) {
+function formatError({ start, var_name }, message, showDetails = true) {
   const { line, col } = start;
   message +=
-    (message[message.length] === "\n" ? " " : "") +
+    (message[message.length - 1] === "\n" ? "" : " ") +
     "at line " +
     line +
     " col " +
     col +
-    ":\n\n";
-  message += "  " + var_name.value + "\n";
-  message += "  " + Array(col).join(" ") + "^";
+    (showDetails ? ":\n\n" : "");
+  if (showDetails) {
+    message += "  " + var_name.value + "\n";
+    message += "  " + Array(col).join(" ") + "^";
+  }
+
   return message;
 }
 
