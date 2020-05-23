@@ -29,7 +29,8 @@ export function compileMiriaCode(code) {
 }
 
 export function executeMiriaCode() {
-  // TODO: Make the logic of the execution with the tokens
+  // TODO: Make the logic of the while and do while loops
+  // TODO: Make the logic for reporting errors with data typing
   store.dispatch("miria/setExecutionStatus", "success");
   store.dispatch("miria/setConsoleOutput", "");
 
@@ -61,25 +62,32 @@ export function executeMiriaCode() {
 function processStatements(map, statements) {
   console.log(statements);
   for (const statement of statements) {
-    if (["var_definition", "var_declaration"].includes(statement.type)) {
-      variableAssignment(map, statement);
-    } else if (statement.type === "var_reassignment") {
-      variableReassignment(map, statement);
-    } else if (statement.type === "call_expression") {
-      functionCall(map, {
-        ...statement,
-        args: statement.arguments,
-      });
-    } else if (statement.type === "if_statement") {
-      ifStatement(map, statement);
-    } else if (statement.type === "for_loop") {
-      forLoopStatement(map, statement);
+    if (store.getters["miria/executionFailed"]) {
+      break;
+    } else {
+      if (["var_definition", "var_declaration"].includes(statement.type)) {
+        variableAssignment(map, statement);
+      } else if (statement.type === "var_reassignment") {
+        variableReassignment(map, statement);
+      } else if (statement.type === "call_expression") {
+        functionCall(map, {
+          ...statement,
+          args: statement.arguments,
+        });
+      } else if (statement.type === "if_statement") {
+        ifStatement(map, statement);
+      } else if (statement.type === "for_loop") {
+        forLoopStatement(map, statement);
+      }
     }
   }
 }
 
-function variableAssignment(map, { var_name, datatype, value }) {
-  var_name = var_name.value;
+function variableAssignment(map, token) {
+  const var_name = token.var_name.value;
+  const datatype = token.datatype;
+  let value = token.value;
+
   if (value) {
     if (value?.type === "var_reference") {
       value = map.get(value.var_name.value).value;
@@ -89,16 +97,23 @@ function variableAssignment(map, { var_name, datatype, value }) {
       value = value.value;
     }
   }
+
   if (datatype === "string") {
-    if (!value) value = "";
-    map.set(var_name, {
-      datatype,
-      value: String(value),
-    });
-  } else if (datatype === "number") {
-    if (!value) value = 0;
-    if (!Number.isNaN(Number(value))) {
+    if (["boolean", "number"].includes(typeof value)) {
+      logError(token, `Error: Datatype string\nbut storing a ${typeof value}`);
+    } else {
+      if (value === undefined) value = "";
       map.set(var_name, { datatype, value });
+    }
+  } else if (datatype === "number") {
+    if (["boolean", "string"].includes(typeof value)) {
+      console.log(typeof value);
+      logError(token, `Error: Datatype number\nbut storing a ${typeof value}`);
+    } else {
+      if (value === undefined) value = 0;
+      if (!Number.isNaN(Number(value))) {
+        map.set(var_name, { datatype, value });
+      }
     }
   } else if (datatype === "boolean") {
     map.set(var_name, {
@@ -127,11 +142,7 @@ function functionCall(map, { fun_name, args }) {
         }
       } else if (arg.type === "binary_operation") {
         flushToOutput(`${evaluateExpression(map, arg)}\n`);
-      } else if (
-        ["string_literal", "number_literal", "boolean_literal"].includes(
-          arg.type
-        )
-      ) {
+      } else if (isDataPrimitive(arg.type)) {
         flushToOutput(`${arg.value}\n`);
       }
     }
@@ -229,16 +240,32 @@ function evaluateExpression(map, { left, operator, right }) {
 function evaluateOperator(map, operator) {
   if (operator.type === "binary_operation") {
     return evaluateExpression(map, operator);
-  } else if (
-    ["boolean_literal", "number_literal", "string_literal"].includes(
-      operator.type
-    )
-  ) {
+  } else if (isDataPrimitive(operator.type)) {
     return operator.value;
   } else if (operator.type === "var_reference") {
     const payload = map.get(operator.var_name.value);
     return payload.value;
   }
+}
+
+function logError(token, message) {
+  store.dispatch("miria/setConsoleOutput", "");
+  store.dispatch("miria/setExecutionStatus", "failed");
+  flushToOutput(formatError(token, message));
+}
+
+function formatError({ start, type, var_name }, message) {
+  const { line, col } = start;
+  message += " at line " + line + " col " + col + ":\n\n";
+  message += "  " + (type === "var_definition" ? var_name.value : "s") + "\n";
+  message += "  " + Array(col).join(" ") + "^";
+  return message;
+}
+
+function isDataPrimitive(value) {
+  return ["boolean_literal", "number_literal", "string_literal"].includes(
+    value
+  );
 }
 
 function flushToOutput(str) {
