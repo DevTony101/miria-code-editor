@@ -29,12 +29,10 @@ export function compileMiriaCode(code) {
 }
 
 export function executeMiriaCode() {
-  // TODO: Make the logic of the while and do while loops
-  // TODO: Make the logic for reporting errors with data typing
   store.dispatch("miria/setExecutionStatus", "success");
   store.dispatch("miria/setConsoleOutput", "");
 
-  // Map helper for keep track of variables
+  // To keep track of variables
   const variables = new Map();
 
   let tokens = store.state.miria.results;
@@ -78,6 +76,10 @@ function processStatements(map, statements) {
         ifStatement(map, statement);
       } else if (statement.type === "for_loop") {
         forLoopStatement(map, statement);
+      } else if (statement.type === "while_loop") {
+        whileLoopStatement(map, statement);
+      } else if (statement.type === "do_while_loop") {
+        doWhileLoopStatement(map, statement);
       }
     }
   }
@@ -241,6 +243,40 @@ function forLoopStatement(map, { loop_variable, iterable, body }) {
       processStatements(map, body.statements);
     }
   }
+}
+
+function whileLoopStatement(map, { body, condition }) {
+  let repeatCounter = 0;
+  if (condition.type === "binary_operation") {
+    while (evaluateExpression(map, condition)) {
+      if (processWhileStatements()) break;
+    }
+  } else {
+    while (evaluateOperator(map, condition)) {
+      if (processWhileStatements()) break;
+    }
+  }
+
+  function processWhileStatements() {
+    processStatements(map, body.statements);
+    repeatCounter++;
+    if (repeatCounter >= 100) {
+      // Prevent an infinite loop
+      logError(
+        {},
+        `Error - While loop stopped beacause\nit took too long to finish...`,
+        false,
+        false
+      );
+      return true;
+    }
+    return false;
+  }
+}
+
+function doWhileLoopStatement(map, statement) {
+  processStatements(map, statement.body.statements);
+  whileLoopStatement(map, statement);
 }
 
 function evaluateExpression(map, { left, operator, right }) {
