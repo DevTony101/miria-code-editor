@@ -53,6 +53,33 @@
         print stuff to the console
       </li>
     </ul>
+    <h3>Expressions</h3>
+    <hr />
+    <p>
+      A programming language wouldn't be one if it didn't support the evaluation
+      of expressions of some sort (sorry HTML). But what are expressions? First
+      we must define what an <b>statement</b> is, an statement is just a
+      <i>command</i>, that your PC can recognize through a programming language,
+      an <b>expression</b> is just an statement that returns a value, not
+      necessarily a numeric one, currently <b>Miria</b> only supports the
+      following expression statements:
+    </p>
+    <ul>
+      <li>Arithmetic expressions</li>
+      <li>Boolean expressions</li>
+      <li>Function call expressions</li>
+    </ul>
+    <p>Here are some examples:</p>
+    <pre>
+      define main as fun() -> void {
+        # prints 10
+        log(2+2*(16/(8-4)))
+        # prints true
+        log(16 % 2 == 0)
+        # prints false
+        log(2 == 4)
+      }</pre
+    >
   </div>
 </template>
 
