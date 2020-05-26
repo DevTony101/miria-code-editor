@@ -1,10 +1,9 @@
 <template>
-  <!--TODO: Change the a tag for a router-link tag-->
   <li :class="getClass" @click="$emit('click', $event)">
-    <a href="#" class="nav-link" :class="{ selected: selected }">
+    <router-link :to="linkTo" class="nav-link" :class="{ selected: selected }">
       <BaseIcon :iconName="icon" />
       <span class="link-text">{{ text }}</span>
-    </a>
+    </router-link>
   </li>
 </template>
 
@@ -13,6 +12,10 @@
     name: "Navitem",
     props: {
       icon: String,
+      linkTo: {
+        type: String,
+        required: true,
+      },
       logo: {
         type: Boolean,
         default: false,

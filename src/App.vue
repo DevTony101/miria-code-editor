@@ -3,26 +3,34 @@
   <div id="app">
     <Sidenav ref="sidenav">
       <template>
-        <Navitem icon="arrow" text="Miria" logo />
+        <Navitem icon="arrow" text="Miria" logo linkTo="/" />
         <Navitem
           icon="code"
           text="Code Editor"
+          linkTo="/"
           :selected="currentPage === 'home'"
           @click="setSelectedPage('home')"
         />
         <Navitem
           icon="open-book"
           text="Docs"
-          :selected="currentPage === 'list'"
-          @click="setSelectedPage('list')"
+          linkTo="/docs"
+          :selected="currentPage === 'docs'"
+          @click="setSelectedPage('docs')"
         />
         <Navitem
           icon="users"
           text="About Miria"
+          linkTo="/"
           :selected="currentPage === 'create'"
           @click="setSelectedPage('create')"
         />
-        <Navitem :icon="icon" text="Change Theme" @click="changeTheme" />
+        <Navitem
+          :icon="icon"
+          text="Change Theme"
+          :linkTo="this.$route.path"
+          @click="changeTheme"
+        />
       </template>
     </Sidenav>
     <router-view />
