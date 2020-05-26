@@ -80,6 +80,68 @@
         log(2 == 4)
       }</pre
     >
+    <h3>Variables</h3>
+    <hr />
+    <p>
+      Printing out numbers and boolean literals is cool and all, but most of the
+      time you would want to store the result of an expression for later use,
+      that's when <b>variables</b> come in. Lets say you want to print a very
+      polite salute along with the name of the person, you may do something like
+      this:
+    </p>
+    <pre>
+      define main as fun() -> void {
+        msg -> string
+        name -> string := "Tony"
+        msg := "Hello, " + name
+        # prints "Hello, Tony"
+        log(msg)
+      }</pre
+    >
+    <p>
+      This example serves to show us three important things:
+    </p>
+    <ul>
+      <li>
+        You can <b><i>declare</i></b> a variable by writing the name of it,
+        followed by the <b><i>define</i></b> operator <i>-></i> and then the
+        data type you want your variable to be
+      </li>
+      <li>
+        You can <b><i>assign</i></b> a value to your variable by using the
+        <b><i>assign</i></b> operator <i>:=</i>
+      </li>
+      <li>
+        You can of course, do the previous in a single line
+      </li>
+    </ul>
+    <p>
+      Now lets say you want to say whether a number is even or not, you may do
+      something like this:
+    </p>
+    <pre>
+      define main as fun() -> void {
+        n -> number := 16
+        isEven -> boolean := n % 2 == 0
+        msg -> string := n + " is even? " + isEven
+        # prints "16 is even? true"
+        log(msg)
+      }</pre
+    >
+    <p>
+      As you can see, you can assign the returning value of any expression in a
+      variable as long as the return type of the expression matches that of the
+      variable, if you try to do something like this:
+    </p>
+    <pre>
+      define main as fun() -> void {
+        s -> string := 2 == 2
+      }</pre
+    >
+    <p>You will get the following error:</p>
+    <pre style="color: var(--error-msg)">
+      Error - Datatype string but storing a boolean at line 2 col 2
+    </pre>
   </div>
 </template>
 
