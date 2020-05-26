@@ -142,6 +142,77 @@
     <pre style="color: var(--error-msg)">
       Error - Datatype string but storing a boolean at line 2 col 2
     </pre>
+    <h3>Control Structures</h3>
+    <hr />
+    <p>
+      Currently, <b>Miria</b> only supports the <b><i>if statement</i></b> as
+      its only control structure (it is planned that <b>Miria</b> recognizes the
+      <b><i>switch statement</i></b> too). <i>If</i> you have programmed before
+      this should be a bliss, <i>if not</i>, don't worry because in
+      <b>Miria</b> is just as simple as:
+    </p>
+    <pre>
+      define main as fun() -> void {
+        # prints "Its true!"
+        evaluate if (true) {
+          log("Its true!")
+        }
+      }</pre
+    >
+    <p>
+      This is pretty straight forward, what we are doing here is asking
+      <i>if</i> the condition inside the parenthesis <b>evaluates</b> to
+      <i>true</i>, if it does, executes the statements inside the curly
+      brackets. Notice that the keyword <b>evaluate</b> it's not a coincidence,
+      you can evaluate expressions inside here and even reference variables,
+      anything that returns a <b>boolean</b>. Remember our program to see if a
+      number was even? With an if statement would be as follows:
+    </p>
+    <pre>
+      define main as fun() -> void {
+        # prints "16 is even"
+        n -> number := 16
+        isEven -> boolean := n % 2 == 0
+        evaluate if (isEven) {
+          log(n + " is even")
+        }
+      }</pre
+    >
+    <p>
+      But what if our number is, in fact, an odd number? Here's where the
+      <b>if not</b> statement comes to play like so:
+    </p>
+    <pre>
+      define main as fun() -> void {
+        # prints "15 is odd"
+        n -> number := 15
+        isEven -> boolean := n % 2 == 0
+        evaluate if (isEven) {
+          log(n + " is even")
+        } if not {
+          log(n + " is odd")
+        }
+      }</pre
+    >
+    <p>
+      This is the equivalent of the <b>else</b> statement in other programming
+      languages. Of course you can nest more "if statements" if you want, in an
+      "<b>else if</b>" fashion like so:
+    </p>
+    <pre>
+      define main as fun() -> void {
+        # prints "15 is odd"
+        n -> number := 15
+        isEven -> boolean := n % 2 == 0
+        evaluate if (n == 0) {
+          log("Is zero")
+        } else evaluate if (isEven) {
+          log(n + " is even")
+        } if not {
+          log(n + " is odd")
+        }
+      }</pre
+    >
   </div>
 </template>
 
