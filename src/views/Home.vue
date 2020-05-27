@@ -38,7 +38,7 @@
     compileMiriaCode,
     executeMiriaCode,
   } from "../grammar/miria-compiler";
-  import "../grammar/parser/miria-highlight";
+  import "../grammar/parser/miriaHighlight";
   import "codemirror/lib/codemirror.css";
   import "codemirror/theme/idea.css";
   import "codemirror/theme/material.css";
