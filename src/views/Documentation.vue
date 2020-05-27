@@ -213,6 +213,95 @@
         }
       }</pre
     >
+    <h3>Iteration control structures</h3>
+    <hr />
+    <p>
+      More often than not you will like to repeat the same task a certain number
+      of times instead of copy pasting, that's when the iteration control
+      structures take place. <b>Miria</b> currently supports the following:
+    </p>
+    <h4>Foreach Loop</h4>
+    <p>
+      It's <b>Miria's</b> version of a <i>for loop</i>, in <b>Miria</b> a
+      <i>foreach loop</i> is an executable statement that cycles through what
+      it's called an <b>iterable</b>, an iterable it's just anything that
+      returns an <i>object</i> that you can iterate on. It sounds weird but
+      actually its an easy concept, here's what you would do:
+    </p>
+    <pre>
+      define main as fun() -> void {
+        # prints numbers from 0 to 9
+        foreach (i -> number in range(0, 10)) {
+          log(i)
+        }
+      }</pre
+    >
+    <p>So, what exactly is happening here?</p>
+    <ul>
+      <li>
+        First, we <b>declare</b> a variable named <b>i</b> and say to Miria that
+        is a
+        <i>number</i>
+      </li>
+      <li>
+        We said that the foreach loop iterates over an iterable object and thats
+        exactly what the <b>range</b> function is returning. The
+        <b>range</b> function is a core function of <b>Miria</b> and what is
+        doing is that is returning a list object and assigning each of the
+        list's values to <b>i</b>
+      </li>
+      <li>
+        Finally we are printing the different values that <b>i</b> is getting
+      </li>
+    </ul>
+    <p>
+      The 2 arguments that the <b>range</b> function take are the lower and
+      upper limits and they can be anything you like
+    </p>
+    <pre>
+      define main as fun() -> void {
+        a -> number := 34
+        b -> number := 52
+        # prints numbers from 34 to 51
+        foreach (i -> number in range(a, b)) {
+          log(i)
+        }
+      }</pre
+    >
+    <p>
+      The <b>range</b> function take exactly two arguments and returns a list
+      with values that goes from <b><i>a</i></b> to <b><i>b - 1</i></b
+      >, if you pass just one argument, it will be considered as the upper limit
+      and the values will go from <b><i>0</i></b> to <b><i>b - 1</i></b
+      >. However if you pass zero arguments or more than two, you will recieve
+      the following errors:
+    </p>
+    <pre style="color: var(--error-msg)">
+      Error - Range function should take exactly 2 arguments, none were given</pre
+    >
+    <pre style="color: var(--error-msg)">
+      Error - Range function should take exactly 2 arguments, 3 were given</pre
+    >
+    <p>
+      So, what if we now want to know all the even and odd numbers between the
+      <b>range</b> that goes from 0 to 25? We may do something like this:
+    </p>
+    <pre>
+      define main as fun() -> void {
+        # prints even and odd number from 0 to 24
+        b -> number := 25
+        i -> number
+        isEven -> boolean
+        foreach (i in range(b)) {
+          isEven := i % 2 == 0
+          evaluate if (isEven) {
+            log(i + " is even")
+          } if not {
+            log(i + " is odd")
+          }
+        }
+      }</pre
+    >
   </div>
 </template>
 
