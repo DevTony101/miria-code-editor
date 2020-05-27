@@ -220,7 +220,7 @@
       of times instead of copy pasting, that's when the iteration control
       structures take place. <b>Miria</b> currently supports the following:
     </p>
-    <h4>Foreach Loop</h4>
+    <h4>Foreach loop</h4>
     <p>
       It's <b>Miria's</b> version of a <i>for loop</i>, in <b>Miria</b> a
       <i>foreach loop</i> is an executable statement that cycles through what
@@ -300,6 +300,41 @@
             log(i + " is odd")
           }
         }
+      }</pre
+    >
+    <h4>Repeat-While loop</h4>
+    <p>
+      It's <b>Miria's</b> version of a <i>while loop</i>, in <b>Miria</b> a
+      <i>repeat-while loop</i> it's what you use when you want your code to be
+      repeated a certain number of times but you don't know <i>how many</i>. It
+      does this by continuously checking a boolean expression,
+      <b>if it's true</b>, then <b>repeat</b>, if not, then break the loop.
+      Here's a simple example:
+    </p>
+    <pre>
+      define main as fun() -> void {
+        # prints "hello world" five times
+        i -> number
+        repeat {
+          log("Hello world")
+          i := i + 1
+        } while (i &lt; 5)
+      }</pre
+    >
+    <h4>Once repeat-while loop</h4>
+    <p>
+      It's <b>Miria's</b> version of a <i>do-while loop</i>, in <b>Miria</b> a
+      <i>once repeat-while loop</i> does exactly what you think it would, it
+      executes the code inside at least once regardless of the value of the
+      boolean expression. Here's an example:
+    </p>
+    <pre>
+      define main as fun() -> void {
+        # prints "hello world" exactly once
+        i -> number := 0
+        once repeat {
+          log("Hello world")
+        } while (i > 0)
       }</pre
     >
   </div>
