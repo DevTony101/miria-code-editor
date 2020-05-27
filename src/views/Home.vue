@@ -38,7 +38,7 @@
     compileMiriaCode,
     executeMiriaCode,
   } from "../grammar/miria-compiler";
-  import "codemirror/mode/miria/miria.js";
+  import "../grammar/codemirror/miria";
   import "codemirror/lib/codemirror.css";
   import "codemirror/theme/idea.css";
   import "codemirror/theme/material.css";

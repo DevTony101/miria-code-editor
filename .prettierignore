@@ -1,1 +1,2 @@
 ./src/grammar/parser/*.js
+./src/grammar/codemirror/*.js
