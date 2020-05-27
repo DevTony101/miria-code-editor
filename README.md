@@ -1,5 +1,5 @@
 # Miria Code Editor
-This is a little project that was made to practice the concepts of Vue and the concepts of grammars, especifically, the context free grammars for creating a new programming language called **Miria**.
+This is a little project that was made to practice the concepts of Vue and the concepts of grammars, especifically, the context free grammars for creating a new programming language called **Miria**. You can give it a try [here](https://miria-code-editor.herokuapp.com/).
 
 ## Features
 ![Banner](https://github.com/DevTony101/miria-code-editor/blob/master/banner.png)
@@ -9,7 +9,7 @@ The main view consist of a text area and a div that mimics a console in which th
 - If statements
 - For, while and do-while statements
 
-These specs a thoroughly explained in miria documentation here. The classic *hello world* program in Miria would be as follows:
+These specs a thoroughly explained in miria documentation [here](https://miria-code-editor.herokuapp.com/docs). The classic *hello world* program in Miria would be as follows:
 ```
 define main as fun() -> void {
   log("Hello world")
@@ -26,3 +26,7 @@ define main as fun() -> void {
 - Fix the bug related to scopes
 - Add the ability to create arrays
 - Add the ability to create functions
+
+## Technologies used
+- [Nearley](https://nearley.js.org/) was used to generate the parser for miria. The miria.ne file, which contains miria's grammar, can be found in the *src/grammar/parser directory*
+- [Codemirror](https://codemirror.net/) was used as the text editor
