@@ -6,7 +6,7 @@
     </div>
     <hr />
     <p>
-      Miria is an (or at least attempts to be) an object oriented programming
+      Miria is (or at least attempts to be) an object oriented programming
       language. Its syntax is inspired by those languages who force you to
       declare the type of your variable before you can do anything with it, in
       fact, those who programmed in <b>Swift</b> will see a resemblance, however
