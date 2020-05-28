@@ -58,7 +58,7 @@
     data: function() {
       return {
         cmOptions: {},
-        code: `define main as fun() -> void {\n  # Declaracion y asignacion de variables\n  a -> number := 10\n  b -> number := 16\n  # Ciclo for \n  foreach (i -> number in range(a, b)) {\n    # Sentencia if - else\n    evaluate if (i % 2 == 0) {\n      # Imprime en consola\n      log(i + " es par")\n    } if not {\n      log(i + " es impar")\n    }\n  }\n  \n  log("\\n")\n  s -> string := "Hola mundo"\n  j -> number\n  # sentencia while\n  repeat {\n    log(s + ", desde Miria!")\n    j := j + 1\n  } while (j < 5)\n}`,
+        code: `define main as fun() -> void {\n  s -> string := "Hello world"\n  log(s + ", from Miria!")\n}`,
         showDefaultOutput: true,
         wasExecuted: false,
       };
