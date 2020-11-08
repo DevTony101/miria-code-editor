@@ -19,11 +19,12 @@
           @click="setSelectedPage('docs')"
         />
         <Navitem
-          icon="users"
-          text="About Miria"
+          icon="gh-icon"
+          text="Repository"
           linkTo="/"
-          :selected="currentPage === 'create'"
-          @click="setSelectedPage('create')"
+          @click="
+            openExternalLink('https://github.com/DevTony101/miria-code-editor')
+          "
         />
         <Navitem
           :icon="icon"
@@ -47,25 +48,28 @@
     mounted() {
       this.updateTheme();
     },
-    data: function() {
+    data: function () {
       return {
         currentPage: "home",
       };
     },
     methods: {
       ...mapActions(["updateTheme"]),
-      setSelectedPage: function(page) {
+      setSelectedPage: function (page) {
         this.currentPage = page;
       },
-      changeTheme: function() {
+      changeTheme: function () {
         this.updateTheme(
           this.theme === "light-theme" ? "dark-theme" : "light-theme"
         );
       },
+      openExternalLink: function (url) {
+        window.open(url, "_blank");
+      },
     },
     computed: {
       ...mapState(["theme"]),
-      icon: function() {
+      icon: function () {
         return this.theme === "light-theme" ? "moon" : "sun";
       },
     },
