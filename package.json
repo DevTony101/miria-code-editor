@@ -5,8 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --fix",
     "build": "vue-cli-service build --fix",
-    "lint": "vue-cli-service lint",
-    "start": "node server.js"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "core-js": "^3.6.4",
