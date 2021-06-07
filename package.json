@@ -11,7 +11,7 @@
     "core-js": "^3.13.1",
     "express": "^4.17.1",
     "lodash": "^4.17.21",
-    "vue": "^2.6.13",
+    "vue": "^2.6.14",
     "vue-codemirror": "^4.0.6",
     "vue-router": "^3.5.1",
     "vue-swal": "^1.0.0",
@@ -30,6 +30,6 @@
     "eslint-plugin-vue": "^7.10.0",
     "nearley": "^2.20.1",
     "prettier": "^2.3.1",
-    "vue-template-compiler": "^2.6.13"
+    "vue-template-compiler": "^2.6.14"
   }
 }
