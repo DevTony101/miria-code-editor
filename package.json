@@ -11,7 +11,7 @@
     "core-js": "^3.20.3",
     "express": "^4.17.2",
     "lodash": "^4.17.21",
-    "vue": "^2.6.14",
+    "vue": "^3.2.31",
     "vue-codemirror": "^4.0.6",
     "vue-router": "^3.5.3",
     "vue-swal": "^1.0.0",
