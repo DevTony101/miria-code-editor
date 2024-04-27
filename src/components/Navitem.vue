@@ -30,7 +30,7 @@
       },
     },
     computed: {
-      getClass: function() {
+      getClass: function () {
         return this.logo ? "logo" : "nav-item";
       },
     },

@@ -22,5 +22,6 @@ module.exports = {
       process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-constant-condition":
       process.env.NODE_ENV === "production" ? "warn" : "off",
+    "vue/multi-word-component-names": "off"
   },
 };

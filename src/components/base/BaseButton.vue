@@ -39,7 +39,7 @@
     align-items: center;
     font-weight: 600;
     text-align: center;
-    width: 120px;
+    width: auto;
   }
 
   .button:hover {
@@ -53,9 +53,28 @@
   }
 
   .button svg {
-    width: 2rem;
-    min-width: 2rem;
+    max-width: 1.5rem;
     height: 15px;
     fill: var(--text-color);
+    padding-right: 0.5rem;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .container {
+      margin: 0 20px 0 0;
+    }
+
+    .title {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .miria-code {
+      display: flex;
+    }
+
+    .codemirror-content {
+      height: 450px;
+    }
   }
 </style>

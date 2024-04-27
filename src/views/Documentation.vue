@@ -92,15 +92,13 @@
     <pre>
       define main as fun() -> void {
         msg -> string
-        name -> string := "Tony"
+        name -> string := "DevTony101"
         msg := "Hello, " + name
-        # prints "Hello, Tony"
+        # prints "Hello, DevTony101"
         log(msg)
       }</pre
     >
-    <p>
-      This example serves to show us three important things:
-    </p>
+    <p>This example serves to show us three important things:</p>
     <ul>
       <li>
         You can <b><i>declare</i></b> a variable by writing the name of it,
@@ -111,9 +109,7 @@
         You can <b><i>assign</i></b> a value to your variable by using the
         <b><i>assign</i></b> operator <i>:=</i>
       </li>
-      <li>
-        You can of course, do the previous in a single line
-      </li>
+      <li>You can of course, do the previous in a single line</li>
     </ul>
     <p>
       Now let's say you want to say whether a number is even or not, you may do
@@ -139,7 +135,7 @@
       }</pre
     >
     <p>You will get the following error:</p>
-    <pre style="color: var(--error-msg)">
+    <pre class="error-pre">
       Error - Datatype string but storing a boolean at line 2 col 2
     </pre>
     <h3>Control Structures</h3>
@@ -276,10 +272,10 @@
       >. However if you pass zero arguments or more than two, you will recieve
       the following errors:
     </p>
-    <pre style="color: var(--error-msg)">
+    <pre class="error-pre">
       Error - Range function should take exactly 2 arguments, none were given</pre
     >
-    <pre style="color: var(--error-msg)">
+    <pre class="error-pre">
       Error - Range function should take exactly 2 arguments, 3 were given</pre
     >
     <p>
@@ -342,7 +338,7 @@
 
 <script>
   export default {
-    name: "Documentation",
+    name: "documentation",
   };
 </script>
 
@@ -350,6 +346,11 @@
   .title-box {
     display: flex;
     align-items: center;
+  }
+
+  .error-pre {
+    color: var(--error-msg);
+    text-wrap: pretty;
   }
 
   .title-box > p {
@@ -363,5 +364,11 @@
 
   pre {
     align-items: center;
+  }
+
+  @media only screen and (max-width: 600px) {
+    * {
+      font-size: small;
+    }
   }
 </style>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Miriam+Libre:wght@400;700&display=swap');
 
 html {
   -webkit-text-size-adjust: 100%;
@@ -72,7 +72,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Miriam Libre', Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.5;
   background: var(--background);
@@ -168,4 +168,18 @@ strong {
 
 ::-webkit-scrollbar-corner {
   background: transparent;
+}
+
+/*Small Screen*/
+@media only screen and (max-width: 600px) {
+
+  .CodeMirror {
+    border: 1px solid #eee !important;
+    height: 333px !important;
+  }
+
+  .codemirror-content {
+    width: 100% !important;
+    height: auto !important;
+  }
 }
