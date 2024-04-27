@@ -2,7 +2,7 @@
 This is a little project that was made to practice the concepts of Vue and the concepts of grammars, especifically, the context free grammars for creating a new programming language called **Miria**. You can give it a try [here](https://miria-code-editor.herokuapp.com/).
 
 ## Features
-![Banner](https://github.com/DevTony101/miria-code-editor/blob/master/banner.png)
+![Banner](https://github.com/DevTony101/miria-code-editor/blob/main/banner.png)
 The main view consist of a text area and a div that mimics a console in which the ouput of the code will appear. **Miria** is still a very young language and thus only supports the following:
 
 - Declaration and assignment of variables
