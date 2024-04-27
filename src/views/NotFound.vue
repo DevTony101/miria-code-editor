@@ -22,13 +22,13 @@
         required: true,
       },
     },
-    data: function() {
+    data: function () {
       return {
         source: "",
       };
     },
     methods: {
-      fetchImage: function() {
+      fetchImage: function () {
         let accentColor = getComputedStyle(document.body)
           .getPropertyValue("--color-accent")
           .substr(3);
@@ -39,7 +39,7 @@
     computed: mapState(["theme"]),
     watch: {
       // eslint-disable-next-line no-unused-vars
-      theme: function(value, oldValue) {
+      theme: function (value, oldValue) {
         this.fetchImage();
       },
     },

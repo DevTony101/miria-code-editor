@@ -12,12 +12,12 @@ export default new Vuex.Store({
     theme: window.localStorage.getItem("theme") ?? "light-theme",
   },
   mutations: {
-    SET_THEME: function(state, theme) {
+    SET_THEME: function (state, theme) {
       state.theme = theme;
     },
   },
   actions: {
-    updateTheme: function({ commit, state }, theme) {
+    updateTheme: function ({ commit, state }, theme) {
       if (!theme) {
         document.body.classList.replace("light-theme", state.theme);
       } else {

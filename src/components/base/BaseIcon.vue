@@ -23,7 +23,7 @@
       },
     },
     computed: {
-      source: function() {
+      source: function () {
         return `/icons.svg#${this.iconName}`;
       },
     },

@@ -2,7 +2,7 @@
   <div class="home main-content">
     <div class="main-title">
       <div class="title">
-        <h1 style="margin: 0">Code Editor</h1>
+        <h1 style="margin: 0">Miria Code Editor</h1>
         <small>Type miria code right away!</small>
       </div>
       <div class="toolbar">
@@ -34,10 +34,7 @@
 <script>
   import { mapState, mapGetters } from "vuex";
   import { codemirror } from "vue-codemirror";
-  import {
-    compileMiriaCode,
-    executeMiriaCode,
-  } from "../grammar/miria-compiler";
+  import { compileMiriaCode, executeMiriaCode } from "@/grammar/miria-compiler";
   import "../grammar/parser/miriaHighlight";
   import "codemirror/lib/codemirror.css";
   import "codemirror/theme/idea.css";
@@ -53,9 +50,10 @@
         theme: this.theme === "light-theme" ? "idea" : "material",
         lineNumbers: true,
         line: true,
+        viewportMargin: Infinity,
       };
     },
-    data: function() {
+    data: function () {
       return {
         cmOptions: {},
         code: `define main as fun() -> void {\n  s -> string := "Hello world"\n  log(s + ", from Miria!")\n}`,
@@ -64,7 +62,7 @@
       };
     },
     methods: {
-      showSwalModal: function(subject, isSuccess) {
+      showSwalModal: function (subject, isSuccess) {
         let message = `Oops! ${subject} failed!`;
         let type = "error";
         if (isSuccess) {
@@ -74,13 +72,13 @@
         }
         this.$swal(message, "See console output for more info", type);
       },
-      compileCode: function() {
+      compileCode: function () {
         this.showDefaultOutput = false;
         this.wasExecuted = false;
         compileMiriaCode(this.code);
         this.showSwalModal("Compilation", !this.compilationFailed);
       },
-      executeCode: function() {
+      executeCode: function () {
         this.showDefaultOutput = false;
         compileMiriaCode(this.code);
         if (!this.compilationFailed) {
@@ -102,13 +100,13 @@
       ...mapState(["theme"]),
       ...mapState("miria", ["results", "output"]),
       ...mapGetters("miria", ["compilationFailed", "executionFailed"]),
-      codeHasErrors: function() {
+      codeHasErrors: function () {
         return this.compilationFailed || this.executionFailed;
       },
     },
     watch: {
       // eslint-disable-next-line no-unused-vars
-      theme: function(value, oldValue) {
+      theme: function (value, oldValue) {
         this.cmOptions = {
           ...this.cmOptions,
           theme: value === "light-theme" ? "idea" : "material",
@@ -155,8 +153,38 @@
 
   /*Small Screen*/
   @media only screen and (max-width: 600px) {
-    .codemirror-content {
-      height: 450px;
+    .main-content {
+      padding: 0;
+    }
+
+    .main-title {
+      display: flex;
+      flex-wrap: wrap;
+      align-content: space-between;
+      align-items: stretch;
+      justify-content: flex-start;
+      position: fixed;
+      top: 0;
+      z-index: 9999;
+      box-shadow: var(--nav-shadow);
+      background-color: var(--nav-bg);
+      padding: 0.5rem 0 0 0.5rem;
+    }
+
+    .toolbar {
+      margin-bottom: 10px;
+    }
+
+    .title {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .miria-code {
+      margin: 140px 0 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0 10px 0 10px;
     }
   }
 </style>
