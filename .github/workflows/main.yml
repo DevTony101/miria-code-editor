@@ -1,14 +1,17 @@
-name: Build Vue
-on: [push]
+name: Build and Deploy Vue Application to Github Pages
+on: 
+    push:
+        branches:
+            -main
 jobs:
-  build_vue:
+  build_deploy_vue:
     runs-on: ubuntu-latest
-    name: Build Vue
+    name: Build and Deploy Vue
     steps:
     - uses: actions/checkout@v2
-    - id: Build-Vue
-      uses: xRealNeon/VuePagesAction@1.0.1
+    - id: Build-Deploy-Vue
+      uses: thefrustrateddev/vue-deploy-github-pages@v1.0.0
       with:
-        username: 'devtony101'
-        reponame: 'miria-code-editor'
+        username: '{{your_username}}'
+        reponame: '{{your_repositoryname}}'
         token: ${{ secrets.GITHUB_TOKEN }}
