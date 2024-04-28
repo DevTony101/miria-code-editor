@@ -1,5 +1,5 @@
 # Miria Code Editor
-This is a little project that was made to practice the concepts of Vue and the concepts of grammars, especifically, the context free grammars for creating a new programming language called **Miria**. You can give it a try [here](https://miria-code-editor.herokuapp.com/).
+This is a little project that was made to practice the concepts of Vue and the concepts of grammars, especifically, the context free grammars for creating a new programming language called **Miria**. You can give it a try [here](https://devtony101.github.io/miria-code-editor/).
 
 ## Features
 ![Banner](https://github.com/DevTony101/miria-code-editor/blob/main/banner.png)
