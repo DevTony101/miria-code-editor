@@ -28,7 +28,7 @@ define main as fun() -> void {
 - Add the ability to create functions
 
 ## Technologies used
-- [Nearley](https://nearley.js.org/) was used to generate the parser for miria. The miria.ne file, which contains miria's grammar, can be found in the *src/grammar/parser directory*
+- [Nearley](https://nearley.js.org/) was used to generate the parser for miria. The miria.ne file, which contains Miria's grammar, can be found in the *src/grammar/parser directory*
 - [Codemirror](https://codemirror.net/) was used as the text editor
 
 Huge thanks to @fireship-io for their tutorial on a css-only side navigation bar that ultimately defined the layout of the app.
