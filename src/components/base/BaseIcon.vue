@@ -24,7 +24,7 @@
     },
     computed: {
       source: function () {
-        return window.location.origin + `/icons.svg#${this.iconName}`;
+        return window.location.origin + window.location.pathname + `/icons.svg#${this.iconName}`;
       },
     },
   };
