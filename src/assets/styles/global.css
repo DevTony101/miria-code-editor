@@ -1,185 +1,270 @@
-@import url('https://fonts.googleapis.com/css2?family=Miriam+Libre:wght@400;700&display=swap');
-
-html {
-  -webkit-text-size-adjust: 100%;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --font-size: 16px;
-  --gray-0: #f8f8f8;
-  --gray-1: #dbe1e8;
-  --gray-2: #b2becd;
-  --gray-3: #6c7983;
-  --gray-4: #757575;
-  --gray-5: #454e56;
-  --gray-6: #2a2e35;
-  --gray-7: #12181b;
-  --red: #ff3860;
-  --red-dark: #ff1443;
-  --red-light: #ff5c7c;
-  --green: #09c372;
-  --green-dark: #07a15e;
-  --blue: #498afb;
-  --blue-dark: #2674fa;
-  --blue-light: #6ca0fc;
-  --orange: #fa8142;
-  --orange-dark: #f96a1f;
-  --orange-light: #fb9865;
-  --purple: #9166cc;
-  --purple-dark: #7d4bc3;
-  --purple-light: #a481d5;
-  --transition-speed: 600ms;
+  /* Catppuccin Latte (Light) */
+  --bg-app: #eff1f5;
+  --bg-panel: #e6e9ef;
+  --bg-hover: #ccd0da;
+  
+  --border-color: #bcc0cc;
+  --text-main: #4c4f69;
+  --text-muted: #8c8fa1;
+  
+  --accent-primary: #ea76cb;
+  --accent-secondary: #8839ef;
+  --accent-tertiary: #1e66f5;
+  
+  --syntax-comment: #9ca0b0;
+  --syntax-string: #40a02b;
+  --syntax-keyword: #8839ef;
+  --syntax-annotation: #df8e1d;
+  --syntax-type: #1e66f5;
+  --syntax-function: #1e66f5;
+  --inline-code: #d20f39;
+  
+  --bg-terminal: #dce0e8;
+  --text-terminal: #4c4f69;
+  
+  --font-ui: 'Nunito', sans-serif;
+  --font-code: 'JetBrains Mono', monospace;
+  
+  --radius-sm: 6px;
+  --radius-md: 10px; /* Toned down from 14px */
+  --radius-lg: 14px;
+  
+  --shadow-float: 0 4px 12px rgba(0, 0, 0, 0.05); /* Toned down shadow */
 }
 
+/* Catppuccin Mocha (Dark) */
 .dark-theme {
-  --background: var(--gray-7);
-  --background-secondary: var(--gray-5);
-  --text-color: var(--gray-2);
-  --text-color-secondary: #fff;
-  --h-color: #fff;
-  --nav-shadow: 4px 0 10px -3px #010101;
-  --card-shadow: 0 4px 8px rgba(0,0,0,0.38);
-  --nav-bg: var(--gray-6);
-  --card-radius: 0.25em;
-  --color-accent: var(--blue);
-  --color-accent-dark: var(--blue-dark);
-  --color-accent-light: var(--blue-light);
-  --error-msg: lightsalmon;
-  --success-msg: lightgreen;
-  transition: all .3s ease;
+  --bg-app: #11111b;
+  --bg-panel: #1e1e2e;
+  --bg-hover: #313244;
+  --border-color: #313244;
+  --text-main: #cdd6f4;
+  --text-muted: #a6adc8;
+  --accent-primary: #f5c2e7;
+  --accent-secondary: #cba6f7;
+  --accent-tertiary: #89b4fa;
+
+  --syntax-comment: #7a829e;
+  --syntax-string: #a6da95;
+  --syntax-keyword: #c6a0f6;
+  --syntax-annotation: #f5a97f;
+  --syntax-type: #8aadf4;
+  --syntax-function: #89b4fa;
+  --inline-code: #f5a97f;
+  
+  --bg-terminal: #181825;
+  --text-terminal: #cdd6f4;
+  --shadow-float: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
-.light-theme {
-  --background: var(--gray-0);
-  --background-secondary: var(--gray-1);
-  --text-color: var(--gray-5);
-  --text-color-secondary: var(--gray-7);
-  --h-color: var(--gray-7);
-  --nav-shadow: 4px 0 10px -3px #c1c1c1;
-  --card-shadow: 0 4px 8px rgba(0,30,84,0.12);
-  --nav-bg: #fff;
-  --card-radius: 0.25em;
-  --color-accent: var(--red);
-  --color-accent-dark: var(--red-dark);
-  --color-accent-light: var(--red-light);
-  --error-msg: crimson;
-  --success-msg: darkgreen;
-  transition: all .3s ease;
+/* Theme: Ocean */
+.theme-ocean {
+  --accent-primary: #0077b6;
+  --accent-secondary: #00b4d8;
+  --accent-tertiary: #90e0ef;
+  --bg-app: #eff5f9;
+  --bg-panel: #e6eef5;
+  --bg-hover: #cce0eb;
+  --border-color: #bcccdc;
+  --text-main: #4c5669;
+}
+.dark-theme.theme-ocean {
+  --accent-primary: #00b4d8;
+  --accent-secondary: #90e0ef;
+  --accent-tertiary: #0077b6;
+  --bg-app: #0d131a;
+  --bg-panel: #15202b;
+  --bg-hover: #22303f;
+  --border-color: #22303f;
+  --bg-terminal: #0a1015;
 }
 
-body {
+/* Theme: Sunset */
+.theme-sunset {
+  --accent-primary: #f77f00;
+  --accent-secondary: #d62828;
+  --accent-tertiary: #fcbf49;
+  --bg-app: #f9f5ef;
+  --bg-panel: #f5eee6;
+  --bg-hover: #ebdfcc;
+  --border-color: #dcd0bc;
+  --text-main: #69564c;
+}
+.dark-theme.theme-sunset {
+  --accent-primary: #f77f00;
+  --accent-secondary: #fcbf49;
+  --accent-tertiary: #d62828;
+  --bg-app: #1a150d;
+  --bg-panel: #2b2215;
+  --bg-hover: #3f3222;
+  --border-color: #3f3222;
+  --bg-terminal: #15100a;
+}
+
+/* Theme: Forest */
+.theme-forest {
+  --accent-primary: #2a9d8f;
+  --accent-secondary: #264653;
+  --accent-tertiary: #e9c46a;
+  --bg-app: #eff9f5;
+  --bg-panel: #e6f5ee;
+  --bg-hover: #ccebdf;
+  --border-color: #bcdcd0;
+  --text-main: #4c6956;
+}
+.dark-theme.theme-forest {
+  --accent-primary: #2a9d8f;
+  --accent-secondary: #e9c46a;
+  --accent-tertiary: #264653;
+  --bg-app: #0d1a13;
+  --bg-panel: #152b22;
+  --bg-hover: #223f32;
+  --border-color: #223f32;
+  --bg-terminal: #0a1510;
+}
+
+html, body {
   margin: 0;
   padding: 0;
-  font-family: 'Miriam Libre', Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-  background: var(--background);
-  color: var(--text-color);
-  transition: background 500ms ease-in-out, color 1000ms ease-in-out;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  transition: background-color 0.3s ease;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  color: var(--h-color);
+* {
+  box-sizing: border-box;
 }
 
-p, span {
-  color: var(--text-color);
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-.main-content {
-  margin-left: 5rem;
-  padding: 1rem;
-}
-
-b,
-strong {
-  font-weight: bolder;
-}
-
-.eyebrow {
-  margin-right: auto;
-  font-size: 20px;
-}
-
-.-shadow {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.13);
-}
-
-.badge {
-  display: inline-flex;
-  height: 26px;
-  width: auto;
-  padding: 0 7px;
-  margin: 0 5px;
-  background: transparent;
-  border-radius: 13px;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 26px;
-}
-
-/*Small Screen*/
-@media only screen and (max-width: 600px) {
-  .main-content {
-    margin: 0;
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
   }
 }
-
-.vue-codemirror {
-  height: 100%;
-}
-
-.CodeMirror {
-  border-radius: 0.5em;
-  height: 520px !important;
-}
-
-::-webkit-scrollbar {
-  width: 5px;
-  height: 11px;
-}
-
-::-webkit-scrollbar-button {
-  width: 5px;
-  height: 0;
-}
-
 ::-webkit-scrollbar-thumb {
-  background: var(--color-accent);
-  border: 0 solid transparent;
-  border-radius: 50px;
+  background: var(--bg-hover);
+  border-radius: 10px;
 }
-
-::-webkit-scrollbar-thumb:active {
-  background: var(--color-accent-dark);
-}
-
 ::-webkit-scrollbar-track {
   background: transparent;
-  border: 0 none #ffffff;
-  border-radius: 53px;
 }
 
-::-webkit-scrollbar-track:active {
+/* Base Buttons */
+.icon-btn {
   background: transparent;
+  border: none;
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease; /* Removed bouncy cubic-bezier */
 }
 
-::-webkit-scrollbar-corner {
-  background: transparent;
+.icon-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-main);
+  /* Removed aggressive scale transform */
 }
 
-/*Small Screen*/
-@media only screen and (max-width: 600px) {
+.icon-btn.primary {
+  background: var(--accent-primary);
+  color: #11111b;
+  box-shadow: 0 2px 8px rgba(245, 194, 231, 0.15); /* Toned down glow */
+}
+.light-theme .icon-btn.primary {
+  color: #ffffff;
+}
 
-  .CodeMirror {
-    border: 1px solid #eee !important;
-    height: 333px !important;
-  }
+.icon-btn.primary:hover {
+  box-shadow: 0 4px 12px rgba(245, 194, 231, 0.3);
+}
 
-  .codemirror-content {
-    width: 100% !important;
-    height: auto !important;
-  }
+/* SweetAlert Overrides */
+.swal2-popup {
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg) !important;
+  font-family: var(--font-ui) !important;
+  box-shadow: var(--shadow-float) !important;
+}
+.swal2-title {
+  color: var(--text-main) !important;
+  font-weight: 800 !important;
+}
+.swal2-confirm {
+  background: var(--accent-primary) !important;
+  color: #11111b !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: 700 !important;
+}
+
+/* Theme Toggle Transition */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, fill 0.3s ease, stroke 0.3s ease !important;
+}
+
+/* Custom Syntax Highlighting Classes for Docs */
+.syn-comment { color: var(--syntax-comment); font-style: italic; }
+.syn-string { color: var(--syntax-string); }
+.syn-keyword { color: var(--syntax-keyword); font-weight: 600; }
+.syn-annotation { color: var(--syntax-annotation); }
+.syn-type { color: var(--syntax-type); }
+.syn-function { color: var(--syntax-function); }
+
+/* Override CodeMirror themes globally to match Docs */
+.CodeMirror span.cm-string,
+.CodeMirror span.cm-string-2 {
+  color: var(--syntax-string) !important;
+}
+.CodeMirror span.cm-keyword {
+  color: var(--syntax-keyword) !important;
+  font-weight: 600;
+}
+.CodeMirror span.cm-comment {
+  color: var(--syntax-comment) !important;
+  font-style: italic;
+}
+.CodeMirror span.cm-atom {
+  color: var(--syntax-annotation) !important;
+}
+.CodeMirror span.cm-class {
+  color: var(--syntax-type) !important;
+}
+.CodeMirror span.cm-callee {
+  color: var(--syntax-function) !important;
+}
+
+/* Force variables, properties, functions, numbers, and operators to match the docs default text color */
+.CodeMirror span.cm-variable,
+.CodeMirror span.cm-variable-2,
+.CodeMirror span.cm-variable-3,
+.CodeMirror span.cm-property,
+.CodeMirror span.cm-def,
+.CodeMirror span.cm-operator,
+.CodeMirror span.cm-punctuation,
+.CodeMirror span.cm-bracket,
+.CodeMirror span.cm-meta,
+.CodeMirror span.cm-number {
+  color: var(--text-main) !important;
 }

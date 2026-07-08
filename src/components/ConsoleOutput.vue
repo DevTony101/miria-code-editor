@@ -1,59 +1,49 @@
 <template>
-  <div class="console-output-container">
-    <div class="console-output">
-      <h3 class="title">Console Output</h3>
-      <hr />
-      <div class="output">
-        <slot>
-        <span>
-          The output of your miria code will appear here. <br>(Errors included!)
-        </span>
-        </slot>
+  <div class="console-body">
+    <slot>
+      <div class="welcome-message">
+        <span class="prompt-arrow">❯</span> Ready for execution.
       </div>
-    </div>
-    <div class="empty-space"></div>
+    </slot>
   </div>
 </template>
 
-<script>
+<script lang="ts">
   export default {
     name: "ConsoleOutput",
   };
 </script>
 
 <style scoped>
-
-  .console-output {
-    background-color: var(--background-secondary);
-    border-radius: 0.5em;
-    padding: 10px 20px 20px;
-    overflow-y: scroll;
-    overflow-x: auto;
+  .console-body {
+    height: 100%;
+    padding: 12px 16px;
+    overflow-y: auto;
+    font-family: var(--font-code);
+    font-size: 14.5px;
+    line-height: 1.6;
+    background-color: var(--bg-terminal);
+    color: var(--text-terminal);
   }
 
-  .output {
-    margin-top: 20px;
+  .welcome-message {
+    color: var(--text-muted);
   }
 
-  .error-msg {
-    color: var(--error-msg);
+  .prompt-arrow {
+    color: var(--accent-tertiary);
+    margin-right: 8px;
   }
 
-  .success-msg {
-    color: var(--success-msg);
+  :deep(.output-text) {
+    margin: 0;
+    color: var(--text-terminal);
+    white-space: pre-wrap;
   }
 
-  @media only screen and (max-width: 600px) {
-    .console-output-container {
-      width: 100%;
-    }
-
-    .console-output {
-      margin-top: 20px;
-    }
-
-    .empty-space {
-      margin-top: 150px;
-    }
+  :deep(.error-msg) {
+    color: var(--accent-primary);
+    white-space: pre-wrap;
+    margin: 0;
   }
 </style>

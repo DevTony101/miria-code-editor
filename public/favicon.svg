@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="miria-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#cba6f7" />
+      <stop offset="100%" stop-color="#89b4fa" />
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="22" fill="#181825" />
+  <path d="M 25 70 L 25 30 L 50 55 L 75 30 L 75 70" fill="none" stroke="url(#miria-gradient)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
