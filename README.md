@@ -1,34 +1,41 @@
 # Miria Code Editor
-This is a little project that was made to practice the concepts of Vue and the concepts of grammars, especifically, the context free grammars for creating a new programming language called **Miria**. You can give it a try [here](https://devtony101.github.io/miria-code-editor/).
 
-## Features
-![Banner](https://github.com/DevTony101/miria-code-editor/blob/main/banner.png)
-The main view consist of a text area and a div that mimics a console in which the ouput of the code will appear. **Miria** is still a very young language and thus only supports the following:
+<p align="center">
+  <img src="./banner.svg" alt="Miria Banner" width="100%" />
+</p>
 
-- Declaration and assignment of variables
-- If statements
-- For, while and do-while statements
+Miria Code Editor is a modern, web-based IDE built with Vue 3, Vite, and TypeScript. It features a custom context-free grammar parsing engine designed specifically to compile and run a bespoke programming language called **Miria**. You can give it a try [here](https://miria-code-editor.netlify.app/).
 
-These specs a thoroughly explained in miria documentation [here](https://miria-code-editor.herokuapp.com/docs). The classic *hello world* program in Miria would be as follows:
-```
+## ✨ Features
+
+- **Custom Programming Language**: Miria is a dynamic language with syntax inspired by modern programming paradigms.
+
+- **In-Browser Compilation**: The grammar is built natively with Nearley.js, allowing code to be parsed and evaluated directly in your browser without a backend.
+- **Advanced Language Features**:
+  - First-class Functions & Lambdas
+  - Object-Oriented Programming (Classes, Interfaces, Inheritance)
+  - Advanced Control Flow (If, For, While, Do-While)
+  - Try/Catch Exceptions
+  - Enums, Dictionaries, and Arrays
+  - Namespaces & Modules
+- **CodeMirror Integration**: Full syntax highlighting, line numbers, code folding, and optimized scroll performance.
+
+## 💻 The Miria Language
+
+A classic *Hello World* program in Miria:
+
+```miria
 define main as fun() -> void {
-  log("Hello world")
+  log("Hello world!")
 }
 ```
 
-**Miria** also recognizes errors related to data types, using variables that are not defined and ilegal operations.
+Miria features comprehensive documentation directly inside the IDE, covering everything from primitive data types to advanced OOP constructs.
 
-## Known bugs
-- Miria does not recognize scopes, thus when creating a variable inside any loop, miria will complain arguing that the variable already exist
+## 🛠️ Technologies Used
 
-## Future improvements
-- Add *break* like statements
-- Fix the bug related to scopes
-- Add the ability to create arrays
-- Add the ability to create functions
-
-## Technologies used
-- [Nearley](https://nearley.js.org/) was used to generate the parser for miria. The miria.ne file, which contains Miria's grammar, can be found in the *src/grammar/parser directory*
-- [Codemirror](https://codemirror.net/) was used as the text editor
-
-Huge thanks to @fireship-io for their tutorial on a css-only side navigation bar that ultimately defined the layout of the app.
+- **Vue 3 + Vite**: Core frontend framework and lightning-fast build tool.
+- **TypeScript**: Ensuring strict type safety and cleaner architecture.
+- **Nearley.js**: Generates the Miria parser.
+- **CodeMirror**: Robust in-browser text editing.
+- **Vuex & Vue Router**: State management and client-side routing.

@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# This is critical for Vue Router to work correctly on Netlify.
+# It ensures that all deep links (like /docs) redirect to index.html 
+# instead of returning a 404 error.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

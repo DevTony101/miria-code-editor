@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <button
-      v-on="$listeners"
       class="button"
       :class="buttonClass"
       v-bind="$attrs"
@@ -12,7 +11,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   export default {
     name: "BaseButton",
     inheritAttrs: false,

@@ -1,13 +1,4 @@
-(function(mod) {
-  if (typeof exports == "object" && typeof module == "object")
-    // CommonJS
-    mod(require("./../../../node_modules/codemirror/lib/codemirror"));
-  else if (typeof define == "function" && define.amd)
-    // AMD
-    define(["./../../../node_modules/codemirror/lib/codemirror"], mod);
-  // Plain browser env
-  else mod(CodeMirror);
-})(function(CodeMirror) {
+import CodeMirror from "codemirror";
   "use strict";
 
   CodeMirror.defineMode("miria", function(config, parserConfig) {
@@ -51,6 +42,15 @@
         switch: kw("switch"),
         case: kw("case"),
         default: kw("default"),
+        namespace: kw("keyword"),
+        import: kw("keyword"),
+        throw: kw("keyword"),
+        enum: kw("keyword"),
+        const: kw("keyword"),
+        static: kw("keyword"),
+        property: kw("keyword"),
+        lambda: kw("keyword"),
+        lmd: kw("keyword"),
         in: operator,
         typeof: operator,
         and: operator,
@@ -68,8 +68,23 @@
         boolean: A,
         number: A,
         void: A,
+        array: A,
+        dictionary: A,
         once: A,
         repeat: A,
+        log: kw("keyword"),
+        str: A,
+        from: kw("keyword"),
+        to: kw("keyword"),
+        value: kw("keyword"),
+        class: kw("class"),
+        interface: kw("keyword"),
+        constructor: kw("keyword"),
+        inheriting: kw("keyword"),
+        implementing: kw("keyword"),
+        overriding: kw("keyword"),
+        super: kw("keyword"),
+        this: kw("keyword"),
       };
     })();
 
@@ -169,6 +184,9 @@
             stream.match(/^(\s|\/\*.*?\*\/)*[\[\(\w]/, false)
           )
             return ret("async", "keyword", word);
+        }
+        if (stream.match(/^\s*\(/, false)) {
+          return ret("variable", "callee", word);
         }
         return ret("variable", "variable", word);
       }
@@ -499,7 +517,7 @@
       if (type == "function") return cont(functiondef);
       if (type == "for")
         return cont(pushlex("form"), forspec, statement, poplex);
-      if (type == "class" || (isTS && value == "interface")) {
+      if (type == "class" || value == "interface") {
         cx.marked = "keyword";
         return cont(
           pushlex("form", type == "class" ? type : value),
@@ -602,7 +620,7 @@
       var maybeop = noComma ? maybeoperatorNoComma : maybeoperatorComma;
       if (atomicTypes.hasOwnProperty(type)) return cont(maybeop);
       if (type == "function") return cont(functiondef, maybeop);
-      if (type == "class" || (isTS && value == "interface")) {
+      if (type == "class" || value == "interface") {
         cx.marked = "keyword";
         return cont(pushlex("form"), classExpression, poplex);
       }
@@ -721,7 +739,7 @@
     }
     function property(type) {
       if (type == "variable") {
-        cx.marked = "property";
+        cx.marked = cx.style == "callee" ? "callee" : "property";
         return cont();
       }
     }
@@ -729,8 +747,8 @@
       if (type == "async") {
         cx.marked = "property";
         return cont(objprop);
-      } else if (type == "variable" || cx.style == "keyword") {
-        cx.marked = "property";
+      } else if (type == "variable" || cx.style == "keyword" || cx.style == "callee") {
+        cx.marked = cx.style == "callee" ? "callee" : "property";
         if (value == "get" || value == "set") return cont(getterSetter);
         var m; // Work around fat-arrow-detection complication for detecting typescript typed arrow params
         if (
@@ -741,7 +759,7 @@
           cx.state.fatArrowAt = cx.stream.pos + m[0].length;
         return cont(afterprop);
       } else if (type == "number" || type == "string") {
-        cx.marked = jsonldMode ? "property" : cx.style + " property";
+        cx.marked = cx.style;
         return cont(afterprop);
       } else if (type == "jsonld-keyword") {
         return cont(afterprop);
@@ -1051,9 +1069,16 @@
       if (
         value == "extends" ||
         value == "implements" ||
+        value == "inheriting" ||
+        value == "from" ||
+        value == "implementing" ||
+        value == "as" ||
         (isTS && type == ",")
       ) {
-        if (value == "implements") cx.marked = "keyword";
+        cx.marked = "keyword";
+        if (value == "inheriting" || value == "as") {
+           return cont(classNameAfter);
+        }
         return cont(isTS ? typeexpr : expression, classNameAfter);
       }
       if (type == "{") return cont(pushlex("}"), classBody, poplex);
@@ -1336,4 +1361,3 @@
     name: "javascript",
     typescript: true,
   });
-});
