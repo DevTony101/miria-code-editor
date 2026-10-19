@@ -28,7 +28,7 @@
     "@vitejs/plugin-vue": "^6.0.7",
     "esbuild": "^0.28.1",
     "eslint": "^8.47.0",
-    "eslint-plugin-vue": "^9.17.0",
+    "eslint-plugin-vue": "^10.11.1",
     "nearley": "^2.20.1",
     "prettier": "^3.0.3",
     "typescript": "^6.0.3",
